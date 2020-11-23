@@ -1,0 +1,23 @@
+.container {
+  margin: 0 auto;
+  max-width: 40rem;
+  padding-top: 1rem;
+}
+
+.title {
+  text-align: center;
+  margin: 0px;
+  margin-bottom: 1rem;
+}
+
+.border {
+  border-bottom: 2px solid;
+  border-radius: 2px;
+  margin-bottom: 2em;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.articles > ul > li {
+  margin-bottom: 1em;
+}
