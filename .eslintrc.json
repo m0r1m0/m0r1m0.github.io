@@ -11,6 +11,9 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off"
   },
+  "env": {
+    "node": true
+  },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",

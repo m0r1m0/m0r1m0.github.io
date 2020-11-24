@@ -1,7 +1,22 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
+import { Article, getArticles } from "../lib/articles";
 import styles from "../styles/home.module.css";
 
-export default function Home(): JSX.Element {
+interface StaticProps {
+  articles: Article[];
+}
+export const getStaticProps: GetStaticProps<StaticProps> = async () => {
+  const articles = getArticles();
+  return {
+    props: {
+      articles,
+    },
+  };
+};
+
+type Props = StaticProps;
+export default function Home({ articles }: Props): JSX.Element {
   return (
     <div className={styles.container}>
       <Head>
@@ -12,13 +27,9 @@ export default function Home(): JSX.Element {
         <div className={styles.border} />
         <section className={styles.articles}>
           <ul>
-            <li>記事タイトル</li>
-            <li>記事タイトル</li>
-            <li>記事タイトル</li>
-            <li>記事タイトル</li>
-            <li>記事タイトル</li>
-            <li>記事タイトル</li>
-            <li>記事タイトル</li>
+            {articles.map((article) => {
+              return <li key={article.id}>{article.title}</li>;
+            })}
           </ul>
         </section>
       </main>
