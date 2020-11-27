@@ -13,11 +13,11 @@ date: 2020-11-23
 `;
   const result = parse(markdown);
   expect(result).toEqual({
-    data: {
+    matter: {
       title: "今日はいい天気",
       date: "2020-11-23",
     },
-    content: `
+    markdown: `
 ## 2020年11月23日
 
 今日はいい天気ですね。明日もいい天気だと嬉しいです。

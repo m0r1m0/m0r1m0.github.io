@@ -1,8 +1,8 @@
 interface ParsedMarkdown {
-  data: {
+  matter: {
     [key: string]: string;
   };
-  content: string;
+  markdown: string;
 }
 
 export function parse(markdown: string): ParsedMarkdown {
@@ -23,8 +23,8 @@ export function parse(markdown: string): ParsedMarkdown {
         if (matched === null) return acc;
         return {
           ...acc,
-          data: {
-            ...acc.data,
+          matter: {
+            ...acc.matter,
             [matched[1].trim()]: matched[2],
           },
         };
@@ -33,12 +33,12 @@ export function parse(markdown: string): ParsedMarkdown {
       // content
       return {
         ...acc,
-        content: `${acc.content}${line}${i !== lines.length - 1 ? "\n" : ""}`,
+        markdown: `${acc.markdown}${line}${i !== lines.length - 1 ? "\n" : ""}`,
       };
     },
     {
-      data: {},
-      content: "",
+      matter: {},
+      markdown: "",
     }
   );
 }
