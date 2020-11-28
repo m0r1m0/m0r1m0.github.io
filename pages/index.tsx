@@ -26,11 +26,14 @@ export default function Home({ articles }: Props): JSX.Element {
       </Head>
       <section className={styles.articles}>
         <ul>
-          {articles.map(({ id, title }) => {
+          {articles.map(({ id, title, date }) => {
             return (
               <li key={id}>
                 <Link href={`/articles/${id}`}>
-                  <a>{title}</a>
+                  <a>
+                    {title}
+                    {date !== null && `（${date}）`}
+                  </a>
                 </Link>
               </li>
             );
