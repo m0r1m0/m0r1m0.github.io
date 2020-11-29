@@ -41,7 +41,7 @@ export const getStaticPaths: GetStaticPaths<Query> = async () => {
 export const getStaticProps: GetStaticProps<DetailProps, Query> = async ({
   params,
 }) => {
-  const article = await getArticle(params.id);
+  const article = await getArticle((params as Query).id);
   return {
     props: {
       title: article.title,
