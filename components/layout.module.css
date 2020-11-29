@@ -10,6 +10,11 @@
   margin-bottom: 1rem;
 }
 
+.title a {
+  text-decoration: none;
+  color: #424242;
+}
+
 .header {
   border-bottom: 2px solid;
   border-radius: 2px;
