@@ -16,6 +16,10 @@ export function parse(markdown: string): ParsedMarkdown {
         return acc;
       }
 
+      if (line.length === 0) {
+        return acc;
+      }
+
       // matter
       if (isMatter) {
         const dataRegExp = /(.+): {0,1}(.+)/;

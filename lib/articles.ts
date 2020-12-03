@@ -12,6 +12,11 @@ export interface Article {
   date: string | null;
   title: string;
   content: string;
+  ogp: {
+    title: string;
+    description: string;
+    image?: string;
+  } | null;
 }
 export function getArticles(): Article[] {
   const fileNames = fs.readdirSync(articlesDirectory);
@@ -29,6 +34,7 @@ export function getArticles(): Article[] {
       date,
       title: parsedMarkdown.matter.title,
       content: parsedMarkdown.markdown,
+      ogp: null,
     };
   });
 }
@@ -53,6 +59,10 @@ export async function getArticle(id: string): Promise<Article> {
     date,
     title: parsedMarkdown.matter.title,
     content: processedContent.toString(),
+    ogp: {
+      title: parsedMarkdown.matter.title,
+      description: parsedMarkdown.markdown.split("\n")[0],
+    },
   };
 }
 

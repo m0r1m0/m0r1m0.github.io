@@ -8,17 +8,30 @@ interface DetailProps {
   date: string | null;
   title: string;
   content: string;
+  ogp: {
+    title: string;
+    description: string;
+    image?: string;
+  } | null;
 }
 
 export default function Detail({
   title,
   content,
   date,
+  ogp,
 }: DetailProps): JSX.Element {
   return (
     <Layout>
       <Head>
         <title>{title}</title>
+        {ogp && (
+          <>
+            <meta property="og:title" content={ogp.title} />
+            <meta property="og:description" content={ogp.description} />
+            <meta name="twitter:card" content="summary" />
+          </>
+        )}
       </Head>
       <article>
         <div>
@@ -56,6 +69,7 @@ export const getStaticProps: GetStaticProps<DetailProps, Query> = async ({
       date: article.date,
       title: article.title,
       content: article.content,
+      ogp: article.ogp,
     },
   };
 };
