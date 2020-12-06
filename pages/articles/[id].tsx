@@ -29,7 +29,14 @@ export default function Detail({
           <>
             <meta property="og:title" content={ogp.title} />
             <meta property="og:description" content={ogp.description} />
-            <meta name="twitter:card" content="summary" />
+            {ogp.image != null && (
+              <meta property="og:image" content={ogp.image} />
+            )}
+            {ogp.image != null ? (
+              <meta name="twitter:card" content="summary_image_large" />
+            ) : (
+              <meta name="twitter:card" content="summary" />
+            )}
           </>
         )}
       </Head>

@@ -59,10 +59,7 @@ export async function getArticle(id: string): Promise<Article> {
     date,
     title: parsedMarkdown.matter.title,
     content: processedContent.toString(),
-    ogp: {
-      title: parsedMarkdown.matter.title,
-      description: parsedMarkdown.markdown.split("\n")[0],
-    },
+    ogp: parsedMarkdown.ogp,
   };
 }
 
