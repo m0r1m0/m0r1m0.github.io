@@ -3,6 +3,7 @@ import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getArticleIds, getArticle } from "../../lib/articles";
 import { ParsedUrlQuery } from "querystring";
+import styles from "./detail.module.css";
 
 interface DetailProps {
   date: string | null;
@@ -40,7 +41,7 @@ export default function Detail({
           </>
         )}
       </Head>
-      <article>
+      <article className={styles.article}>
         <div>
           {date && <span>{date}</span>}
           <h1>{title}</h1>
