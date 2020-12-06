@@ -8,15 +8,20 @@ interface ParsedMarkdown {
 export function parse(markdown: string): ParsedMarkdown {
   const lines = markdown.split("\n");
   let isMatter = false;
+  let deleteNextLine = false;
   return lines.reduce<ParsedMarkdown>(
     (acc, line, i) => {
       // matter start or end
       if (line === "---") {
+        if (isMatter) {
+          deleteNextLine = true;
+        }
         isMatter = !isMatter;
         return acc;
       }
 
-      if (line.length === 0) {
+      if (line.length === 0 && deleteNextLine) {
+        deleteNextLine = false;
         return acc;
       }
 
