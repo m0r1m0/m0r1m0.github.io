@@ -21,22 +21,38 @@ export interface Article {
 export function getArticles(): Article[] {
   const fileNames = fs.readdirSync(articlesDirectory);
 
-  return fileNames.map<Article>((fileName) => {
-    const id = getId(fileName);
-    const date = getDate(fileName);
-    const markdown = fs.readFileSync(
-      path.join(articlesDirectory, fileName),
-      "utf-8"
-    );
-    const parsedMarkdown = parse(markdown);
-    return {
-      id,
-      date,
-      title: parsedMarkdown.matter.title,
-      content: parsedMarkdown.markdown,
-      ogp: null,
-    };
-  });
+  return fileNames
+    .slice()
+    .sort((nameA, nameB) => {
+      const dateA = getDate(nameA);
+      const dateB = getDate(nameB);
+      if (dateA === null || dateB === null) {
+        return 1;
+      }
+      if (dayjs(dateA).isBefore(dateB)) {
+        return 1;
+      }
+      if (dayjs(dateA).isAfter(dateB)) {
+        return -1;
+      }
+      return 0;
+    })
+    .map<Article>((fileName) => {
+      const id = getId(fileName);
+      const date = getDate(fileName);
+      const markdown = fs.readFileSync(
+        path.join(articlesDirectory, fileName),
+        "utf-8"
+      );
+      const parsedMarkdown = parse(markdown);
+      return {
+        id,
+        date: date && dayjs(date).format("YYYY年MM月DD日"),
+        title: parsedMarkdown.matter.title,
+        content: parsedMarkdown.markdown,
+        ogp: null,
+      };
+    });
 }
 
 export function getArticleIds(): string[] {
@@ -56,7 +72,7 @@ export async function getArticle(id: string): Promise<Article> {
     .process(parsedMarkdown.markdown);
   return {
     id,
-    date,
+    date: date && dayjs(date).format("YYYY年MM月DD日"),
     title: parsedMarkdown.matter.title,
     content: processedContent.toString(),
     ogp: parsedMarkdown.ogp,
@@ -67,17 +83,10 @@ function getId(fileName: string): string {
   return fileName.replace(/\.md$/, "");
 }
 
-export function getDate(
-  fileName: string,
-  format?: (date: Date) => string
-): string | null {
+export function getDate(fileName: string): Date | null {
   const matched = /(\d{1,4}-\d{1,2}-\d{1,2})-.*\.md$/.exec(fileName);
   if (matched == null) {
     return null;
   }
-  const date = dayjs(matched[1]).toDate();
-  if (typeof format === "function") {
-    return format(date);
-  }
-  return dayjs(matched[1]).format("YYYY年MM月DD日");
+  return dayjs(matched[1]).toDate();
 }
