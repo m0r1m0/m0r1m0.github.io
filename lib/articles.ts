@@ -19,7 +19,12 @@ export interface Article {
   } | null;
 }
 export function getArticles(): Article[] {
-  const fileNames = fs.readdirSync(articlesDirectory);
+  const fileNames = fs
+    .readdirSync(articlesDirectory, {
+      withFileTypes: true,
+    })
+    .filter((dirent) => dirent.isFile && path.extname(dirent.name) === ".md")
+    .map((d) => d.name);
 
   return fileNames
     .slice()
@@ -37,7 +42,7 @@ export function getArticles(): Article[] {
       }
       return 0;
     })
-    .map<Article>((fileName) => {
+    .map<Article | null>((fileName) => {
       const id = getId(fileName);
       const date = getDate(fileName);
       const markdown = fs.readFileSync(
@@ -45,6 +50,9 @@ export function getArticles(): Article[] {
         "utf-8"
       );
       const parsedMarkdown = parse(markdown);
+      if (parsedMarkdown === null) {
+        return null;
+      }
       return {
         id,
         date: date && dayjs(date).format("YYYY年MM月DD日"),
@@ -52,7 +60,8 @@ export function getArticles(): Article[] {
         content: parsedMarkdown.markdown,
         ogp: null,
       };
-    });
+    })
+    .filter((v) => v !== null) as Article[];
 }
 
 export function getArticleIds(): string[] {
@@ -62,11 +71,14 @@ export function getArticleIds(): string[] {
   });
 }
 
-export async function getArticle(id: string): Promise<Article> {
+export async function getArticle(id: string): Promise<Article | null> {
   const filePath = path.join(articlesDirectory, `${id}.md`);
   const date = getDate(`${id}.md`);
   const markdown = fs.readFileSync(filePath, "utf-8");
   const parsedMarkdown = parse(markdown);
+  if (parsedMarkdown === null) {
+    return null;
+  }
   const processedContent = await remark()
     .use(html)
     .process(parsedMarkdown.markdown);

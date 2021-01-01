@@ -72,6 +72,16 @@ export const getStaticProps: GetStaticProps<DetailProps, Query> = async ({
   params,
 }) => {
   const article = await getArticle((params as Query).id);
+  if (article === null) {
+    return {
+      props: {
+        date: null,
+        title: "",
+        content: "",
+        ogp: null,
+      },
+    };
+  }
   return {
     props: {
       date: article.date,

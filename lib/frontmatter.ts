@@ -10,10 +10,15 @@ interface ParsedMarkdown {
   };
 }
 
-export function parse(markdown: string): ParsedMarkdown {
+/**
+ * markdownからfrontmatter、markdown本文、ogp情報にわける
+ * @param markdown markdownテキスト
+ * @returns Parse後の情報。形式がinvalidの場合、`null`を返す
+ */
+export function parse(markdown: string): ParsedMarkdown | null {
   const lines = markdown.split("\n");
   let isMatter = false;
-  return lines.reduce<ParsedMarkdown>(
+  const result = lines.reduce<ParsedMarkdown>(
     (acc, line, i) => {
       // matter start or end
       if (line === "---") {
@@ -64,4 +69,19 @@ export function parse(markdown: string): ParsedMarkdown {
       },
     }
   );
+  if (isFormatValid(result)) {
+    return result;
+  }
+  return null;
+}
+
+/**
+ * parse結果がvalidかどうかをチェックする
+ * @param parsedMarkdown parse結果
+ */
+function isFormatValid(parsedMarkdown: ParsedMarkdown): boolean {
+  if (parsedMarkdown.matter.title == null) {
+    return false;
+  }
+  return true;
 }
