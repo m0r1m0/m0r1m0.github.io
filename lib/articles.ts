@@ -55,10 +55,10 @@ export function getArticles(): Article[] {
       }
       return {
         id,
-        date: date && dayjs(date).format("YYYY年MM月DD日"),
+        date: date && dayjs(date).toISOString(),
         title: parsedMarkdown.matter.title,
         content: parsedMarkdown.markdown,
-        ogp: null,
+        ogp: parsedMarkdown.ogp,
       };
     })
     .filter((v) => v !== null) as Article[];
