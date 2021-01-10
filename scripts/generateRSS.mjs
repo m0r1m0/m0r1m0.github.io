@@ -50,9 +50,9 @@ function main() {
 
 function generateRssItem(article) {
   return `<item>
-  <guid>https://yuki-wd7.com/articles/${article.id}</guid>
+  <guid>https://yuki-wd.github.io/articles/${article.id}</guid>
   <title>${article.title}</title>
-  <link>https://yuki-wd7.com/articles/${article.id}</link>
+  <link>https://yuki-wd.github.io/articles/${article.id}</link>
   <description><![CDATA[${article.ogp.description}]]></description>
   ${
     article.date !== null
