@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "mkdir out && next build",
+    "build": "next build",
     "start": "next start",
-    "export": "next export",
+    "export": "next export && node ./scripts/generateRSS.mjs",
     "lint": "eslint .",
     "fix": "eslint --fix . && prettier --write .",
     "test": "jest"

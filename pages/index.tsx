@@ -4,8 +4,6 @@ import { Article, getArticles } from "../lib/articles";
 import styles from "../styles/home.module.css";
 import Link from "next/link";
 import Layout from "../components/Layout";
-import { generateRss } from "../lib/generateRss";
-import fs from "fs";
 import dayjs from "dayjs";
 
 interface StaticProps {
@@ -13,9 +11,6 @@ interface StaticProps {
 }
 export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   const articles = getArticles();
-  const rss = generateRss(articles);
-  fs.writeFileSync("./out/rss.xml", rss);
-
   return {
     props: {
       articles,
