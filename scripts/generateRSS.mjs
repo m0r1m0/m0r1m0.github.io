@@ -1,14 +1,16 @@
 import fs from "fs";
 import dayjs from "dayjs";
 import path from "path";
+import remark from "remark";
+import html from "remark-html";
 
 const articlesDirectory = path.join(process.cwd(), "articles");
 
-function main() {
+async function main() {
   const fileNames = getArticleFileNames();
   // 最新20件を対象にする
-  const articles = fileNames
-    .map((f) => getArticle(f))
+  const articles = await Promise.all(fileNames.map((f) => getArticle(f)));
+  const sorted = articles
     .filter((a) => a !== null)
     .sort((article1, article2) => {
       const date1 = article1.date;
@@ -23,26 +25,25 @@ function main() {
     })
     .slice(0, 20);
 
-  if (articles.length < 1) {
+  if (sorted.length < 1) {
     return;
   }
-
   fs.writeFileSync(
     "./out/rss.xml",
-    `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>morimo</title>
     <link>https://yuki-wd.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
     ${
-      articles[0].date !== null
+      sorted[0].date !== null
         ? `<lastBuildDate>${new Date(
-            articles[0].date
+            sorted[0].date
           ).toUTCString()}</lastBuildDate>`
         : ""
     }
-    ${articles.map(generateRssItem).join("")}
+    ${sorted.map(generateRssItem).join("")}
   </channel>
 </rss>`
   );
@@ -54,6 +55,7 @@ function generateRssItem(article) {
   <title>${article.title}</title>
   <link>https://yuki-wd.github.io/articles/${article.id}</link>
   <description><![CDATA[${article.ogp.description}]]></description>
+  <content:encoded><![CDATA[${article.content}]]></content:encoded>
   ${
     article.date !== null
       ? `<pubDate>${new Date(article.date).toUTCString()}</pubDate>`
@@ -72,7 +74,7 @@ function getArticleFileNames() {
   return fileNames;
 }
 
-function getArticle(fileName) {
+async function getArticle(fileName) {
   const id = getIdFromFileName(fileName);
   const date = getDateFromFileName(fileName);
   const markdown = fs.readFileSync(
@@ -83,11 +85,14 @@ function getArticle(fileName) {
   if (parsedMarkdown === null) {
     return null;
   }
+  const processedContent = await remark()
+    .use(html)
+    .process(parsedMarkdown.markdown);
   return {
     id: id,
     date: date && dayjs(date).toISOString(),
     title: parsedMarkdown.matter.title,
-    content: parsedMarkdown.markdown,
+    content: processedContent.toString(),
     ogp: parsedMarkdown.ogp,
   };
 }
