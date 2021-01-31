@@ -4,8 +4,18 @@
     <link>https://yuki-wd.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Fri, 08 Jan 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 31 Jan 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://yuki-wd.github.io/articles/2021-01-31-calendar</guid>
+  <title>定期的にやりたいことをリマインドしたい</title>
+  <link>https://yuki-wd.github.io/articles/2021-01-31-calendar</link>
+  <description><![CDATA[年始には今年はちゃんと掃除をするし早起きをするし運動もして勉強もするぞ〜〜〜と意気込んでいたものの、1ヶ月もたたないうちに継続できなくなっていった（主に掃除運動）。そもそも、定期的にやりたいことの、なにが、いつやりたいことなのかを記憶しておくことができない。]]></description>
+  <content:encoded><![CDATA[<p>年始には今年はちゃんと掃除をするし早起きをするし運動もして勉強もするぞ〜〜〜と意気込んでいたものの、1ヶ月もたたないうちに継続できなくなっていった（主に掃除運動）。そもそも、定期的にやりたいことの、なにが、いつやりたいことなのかを記憶しておくことができない。</p>
+<p>ということで、この問題を解消すべく、なにかリマインドしてくれるようなサービスでも作ろうかと思いたった。隔週、毎月第一水曜、4日ごと、など柔軟に間隔を設定できるといいよな〜と思いながら案を出していたが、Googleカレンダーを使えばいいことに気づいた。Googleカレンダーがかなり柔軟に間隔設定できることを知らなかった。</p>
+<p>ひとまず、思いついたものをGoogleカレンダーに登録し、通知オンにしておいた。これで来月からは意識高めな生活を遅れるに違いない。</p>
+]]></content:encoded>
+  <pubDate>Sun, 31 Jan 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://yuki-wd.github.io/articles/2021-01-08-nabe-zosui</guid>
   <title>鍋、雑炊、鍋、雑炊</title>
   <link>https://yuki-wd.github.io/articles/2021-01-08-nabe-zosui</link>
