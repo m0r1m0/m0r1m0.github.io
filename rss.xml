@@ -4,8 +4,18 @@
     <link>https://yuki-wd.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Sun, 31 Jan 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 01 Feb 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://yuki-wd.github.io/articles/2021-02-01-markdown-parser</guid>
+  <title>Markdownパーサーを作り始めた</title>
+  <link>https://yuki-wd.github.io/articles/2021-02-01-markdown-parser</link>
+  <description><![CDATA[Markdownパーサーを作り始めた。]]></description>
+  <content:encoded><![CDATA[<p>Markdownパーサーを作り始めた。</p>
+<p>今まで人生で一度もパーサー的な実装をしたことがなかったことと、このブログの実装において利用しているremarkを自作のもので置き換えてみたい欲から作り始めた。<a href="https://spec.commonmark.org/0.29/">CommonMark 0.29</a> の仕様にのっとって実装を進めている。headers, code blocksなど各仕様ごとに実例があるのでそれをテストケースとしてテストしている。</p>
+<p>各テストケースをpassできるように実装していくため、目に見えて進捗率がわかりやすいのでモチベーションを維持しやすいのがとても良い（といってもまだ5日目）。毎朝少しずつ進めていき、将来的にはブログのmarkdownのパース処理を置き換えたい。</p>
+]]></content:encoded>
+  <pubDate>Mon, 01 Feb 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://yuki-wd.github.io/articles/2021-01-31-calendar</guid>
   <title>定期的にやりたいことをリマインドしたい</title>
   <link>https://yuki-wd.github.io/articles/2021-01-31-calendar</link>
