@@ -4,8 +4,21 @@
     <link>https://yuki-wd.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 01 Feb 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 05 Feb 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://yuki-wd.github.io/articles/2021-02-05-xm4</guid>
+  <title>SONY WH-1000XM4を買った</title>
+  <link>https://yuki-wd.github.io/articles/2021-02-05-xm4</link>
+  <description><![CDATA[いつのまにかairpods proをなくしてしまったため、代わりにWH-1000XM4を買った。]]></description>
+  <content:encoded><![CDATA[<p>いつのまにかairpods proをなくしてしまったため、代わりにWH-1000XM4を買った。</p>
+<p><img src="https://i.imgur.com/mLMCbRT.jpg" alt=""></p>
+<p><a href="https://www.beatsbydre.com/jp/headphones/solo-pro">beats solo pro</a>と迷ったが、オンイヤーは耳が痛くなって耐えられないだろうと思い、WH-1000XM4にした。この判断は正解で、全然耳が痛くならない。</p>
+<p>同じくSONYの<a href="https://www.sony.jp/headphone/products/WF-1000XM3/">WF-1000XM3</a>を持っていて、買った当時はノイキャンってすげーなとはしゃいでいたが、WH-1000XM4はそれ以上にすごかった。つけた瞬間、しんとなるのはほんとにすごい。</p>
+<p>あとは、操作性もよい。耳の部分をタッチで操作するが、イヤホンと違って面積が広いので押しやすいし、誤タップすることもない。次の曲、前の曲といった操作も直感的だし、ストレスなく操作を検知してくれる。素晴らしい。</p>
+<p>ただ、僕の頭がクソでかいので、長時間つけていると頭が痛くなる。これはどうしようもない。。頭がでかい人向けのヘッドホン出してください。</p>
+]]></content:encoded>
+  <pubDate>Fri, 05 Feb 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://yuki-wd.github.io/articles/2021-02-01-markdown-parser</guid>
   <title>Markdownパーサーを作り始めた</title>
   <link>https://yuki-wd.github.io/articles/2021-02-01-markdown-parser</link>
