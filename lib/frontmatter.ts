@@ -49,7 +49,7 @@ export function parse(markdown: string): ParsedMarkdown | null {
         acc.ogp.description = line;
       }
 
-      const imgMatched = /!\[.+\]\((.+)\)/.exec(line);
+      const imgMatched = /!\[.*\]\((.+)\)/.exec(line);
       if (acc.ogp.image == null && imgMatched !== null) {
         acc.ogp.image = imgMatched[1];
       }
