@@ -1,14 +1,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>morimo</title>
-    <link>https://yuki-wd.github.io</link>
+    <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
     <lastBuildDate>Sun, 07 Feb 2021 00:00:00 GMT</lastBuildDate>
     <item>
-  <guid>https://yuki-wd.github.io/articles/2021-02-07-tuna-bowl</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-02-07-tuna-bowl</guid>
   <title>マグロ漬け丼</title>
-  <link>https://yuki-wd.github.io/articles/2021-02-07-tuna-bowl</link>
+  <link>https://m0r1m0.github.io/articles/2021-02-07-tuna-bowl</link>
   <description><![CDATA[マグロの漬け丼を食べた。]]></description>
   <content:encoded><![CDATA[<p>マグロの漬け丼を食べた。</p>
 <p><img src="https://i.imgur.com/TcVABNE.jpg" alt="マグロの漬け丼"></p>
@@ -18,9 +18,9 @@
 ]]></content:encoded>
   <pubDate>Sun, 07 Feb 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-02-05-xm4</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-02-05-xm4</guid>
   <title>SONY WH-1000XM4を買った</title>
-  <link>https://yuki-wd.github.io/articles/2021-02-05-xm4</link>
+  <link>https://m0r1m0.github.io/articles/2021-02-05-xm4</link>
   <description><![CDATA[いつのまにかairpods proをなくしてしまったため、代わりにWH-1000XM4を買った。]]></description>
   <content:encoded><![CDATA[<p>いつのまにかairpods proをなくしてしまったため、代わりにWH-1000XM4を買った。</p>
 <p><img src="https://i.imgur.com/mLMCbRT.jpg" alt=""></p>
@@ -31,9 +31,9 @@
 ]]></content:encoded>
   <pubDate>Fri, 05 Feb 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-02-01-markdown-parser</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-02-01-markdown-parser</guid>
   <title>Markdownパーサーを作り始めた</title>
-  <link>https://yuki-wd.github.io/articles/2021-02-01-markdown-parser</link>
+  <link>https://m0r1m0.github.io/articles/2021-02-01-markdown-parser</link>
   <description><![CDATA[Markdownパーサーを作り始めた。]]></description>
   <content:encoded><![CDATA[<p>Markdownパーサーを作り始めた。</p>
 <p>今まで人生で一度もパーサー的な実装をしたことがなかったことと、このブログの実装において利用しているremarkを自作のもので置き換えてみたい欲から作り始めた。<a href="https://spec.commonmark.org/0.29/">CommonMark 0.29</a> の仕様にのっとって実装を進めている。headers, code blocksなど各仕様ごとに実例があるのでそれをテストケースとしてテストしている。</p>
@@ -41,9 +41,9 @@
 ]]></content:encoded>
   <pubDate>Mon, 01 Feb 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-01-31-calendar</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-01-31-calendar</guid>
   <title>定期的にやりたいことをリマインドしたい</title>
-  <link>https://yuki-wd.github.io/articles/2021-01-31-calendar</link>
+  <link>https://m0r1m0.github.io/articles/2021-01-31-calendar</link>
   <description><![CDATA[年始には今年はちゃんと掃除をするし早起きをするし運動もして勉強もするぞ〜〜〜と意気込んでいたものの、1ヶ月もたたないうちに継続できなくなっていった（主に掃除運動）。そもそも、定期的にやりたいことの、なにが、いつやりたいことなのかを記憶しておくことができない。]]></description>
   <content:encoded><![CDATA[<p>年始には今年はちゃんと掃除をするし早起きをするし運動もして勉強もするぞ〜〜〜と意気込んでいたものの、1ヶ月もたたないうちに継続できなくなっていった（主に掃除運動）。そもそも、定期的にやりたいことの、なにが、いつやりたいことなのかを記憶しておくことができない。</p>
 <p>ということで、この問題を解消すべく、なにかリマインドしてくれるようなサービスでも作ろうかと思いたった。隔週、毎月第一水曜、4日ごと、など柔軟に間隔を設定できるといいよな〜と思いながら案を出していたが、Googleカレンダーを使えばいいことに気づいた。Googleカレンダーがかなり柔軟に間隔設定できることを知らなかった。</p>
@@ -51,9 +51,9 @@
 ]]></content:encoded>
   <pubDate>Sun, 31 Jan 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-01-08-nabe-zosui</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-01-08-nabe-zosui</guid>
   <title>鍋、雑炊、鍋、雑炊</title>
-  <link>https://yuki-wd.github.io/articles/2021-01-08-nabe-zosui</link>
+  <link>https://m0r1m0.github.io/articles/2021-01-08-nabe-zosui</link>
   <description><![CDATA[最近やたらとメシを作るのが面倒なんだけど、鍋と雑炊を繰り返せばいいことに気づいてしまった。]]></description>
   <content:encoded><![CDATA[<p>最近やたらとメシを作るのが面倒なんだけど、鍋と雑炊を繰り返せばいいことに気づいてしまった。</p>
 <p><img src="https://i.imgur.com/H6PeuwJ.jpeg" alt="ある日の雑炊"></p>
@@ -62,19 +62,19 @@
 ]]></content:encoded>
   <pubDate>Fri, 08 Jan 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-01-04-hakusai</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-01-04-hakusai</guid>
   <title>白菜 豚バラ</title>
-  <link>https://yuki-wd.github.io/articles/2021-01-04-hakusai</link>
-  <description><![CDATA[[昨日](https://yuki-wd.github.io/articles/2021-01-03-nabe)に続き、白菜。塩ダレ炒めで食べた。⭐５。]]></description>
-  <content:encoded><![CDATA[<p><a href="https://yuki-wd.github.io/articles/2021-01-03-nabe">昨日</a>に続き、白菜。塩ダレ炒めで食べた。⭐５。</p>
+  <link>https://m0r1m0.github.io/articles/2021-01-04-hakusai</link>
+  <description><![CDATA[[昨日](https://m0r1m0.github.io/articles/2021-01-03-nabe)に続き、白菜。塩ダレ炒めで食べた。⭐５。]]></description>
+  <content:encoded><![CDATA[<p><a href="https://m0r1m0.github.io/articles/2021-01-03-nabe">昨日</a>に続き、白菜。塩ダレ炒めで食べた。⭐５。</p>
 <p><img src="https://i.imgur.com/x2coBbB.jpg" alt="豚バラと白菜のとろとろ塩だれ炒め" title="豚バラと白菜のとろとろ塩だれ炒め"></p>
 <p>今日のレシピは、<a href="https://oceans-nadia.com/user/22780/recipe/220209">とろみづけ不要♪『豚バラと白菜のとろとろ塩だれ炒め』</a></p>
 ]]></content:encoded>
   <pubDate>Mon, 04 Jan 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-01-03-nabe</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-01-03-nabe</guid>
   <title>鶏だし蒸し鍋</title>
-  <link>https://yuki-wd.github.io/articles/2021-01-03-nabe</link>
+  <link>https://m0r1m0.github.io/articles/2021-01-03-nabe</link>
   <description><![CDATA[白菜が大量にあるので、蒸し鍋をした。⭐５。うまい。]]></description>
   <content:encoded><![CDATA[<p>白菜が大量にあるので、蒸し鍋をした。⭐５。うまい。</p>
 <p><img src="https://i.imgur.com/1ipS2EE.jpg" alt="鶏だし蒸し鍋" title="鶏だし蒸し鍋"></p>
@@ -83,9 +83,9 @@
 ]]></content:encoded>
   <pubDate>Sun, 03 Jan 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2021-01-01-zettai-okiru</guid>
+  <guid>https://m0r1m0.github.io/articles/2021-01-01-zettai-okiru</guid>
   <title>確実に起きる方法 2021</title>
-  <link>https://yuki-wd.github.io/articles/2021-01-01-zettai-okiru</link>
+  <link>https://m0r1m0.github.io/articles/2021-01-01-zettai-okiru</link>
   <description><![CDATA[ぼくは弱いので前日夜、早起きするぞと意気込んでも、ほぼ確実に二度寝をしてしまう。]]></description>
   <content:encoded><![CDATA[<p>ぼくは弱いので前日夜、早起きするぞと意気込んでも、ほぼ確実に二度寝をしてしまう。</p>
 <p>確実に起きるにはどうすればいいか模索した結果、結論に至った。<strong>マックデリバリーを起きたい時間に頼めばいい(ただし、一番はやくて 7:30)。</strong></p>
@@ -105,9 +105,9 @@
 ]]></content:encoded>
   <pubDate>Fri, 01 Jan 2021 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-31-osouji-soba</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-31-osouji-soba</guid>
   <title>年越しそば</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-31-osouji-soba</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-31-osouji-soba</link>
   <description><![CDATA[年越しそば食べた。]]></description>
   <content:encoded><![CDATA[<p>年越しそば食べた。</p>
 <p><img src="https://i.imgur.com/bxbj508.jpg" alt="そば" title="年越しそば"></p>
@@ -116,9 +116,9 @@
 ]]></content:encoded>
   <pubDate>Thu, 31 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-20-carbonara</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-20-carbonara</guid>
   <title>カルボナーラ</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-20-carbonara</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-20-carbonara</link>
   <description><![CDATA[昼、カルボナーラを食べた。]]></description>
   <content:encoded><![CDATA[<p>昼、カルボナーラを食べた。</p>
 <p><img src="https://i.imgur.com/okP7RcZ.jpeg" alt="カルボナーラ"></p>
@@ -127,9 +127,9 @@
 ]]></content:encoded>
   <pubDate>Sun, 20 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-16-ring-fit-adventure</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-16-ring-fit-adventure</guid>
   <title>リングフィットアドベンチャーを買った</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-16-ring-fit-adventure</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-16-ring-fit-adventure</link>
   <description><![CDATA[三日前 Amazon で買ったリングフィットアドベンチャーが届いた。]]></description>
   <content:encoded><![CDATA[<p>三日前 Amazon で買ったリングフィットアドベンチャーが届いた。</p>
 <p><img src="https://i.imgur.com/Zm25fo3.jpg" alt="リングフィットアドベンチャー"></p>
@@ -141,9 +141,9 @@
 ]]></content:encoded>
   <pubDate>Wed, 16 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-15-gmail</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-15-gmail</guid>
   <title>Gmailを整理する</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-15-gmail</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-15-gmail</link>
   <description><![CDATA[年末だし掃除したい気分になった。毎日数十件未読がたまっていって、ほぼ読めてない状態だったので、整理することにした。]]></description>
   <content:encoded><![CDATA[<p>年末だし掃除したい気分になった。毎日数十件未読がたまっていって、ほぼ読めてない状態だったので、整理することにした。</p>
 <p>まず、最新の未読から、必要なものをカテゴリ分けして、ラベルを付けていった。300 件くらいラベルをつけたところで力尽きた。</p>
@@ -152,21 +152,21 @@
 ]]></content:encoded>
   <pubDate>Tue, 15 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-13-new-table</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-13-new-table</guid>
   <title>新しいテーブルが届いた</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-13-new-table</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-13-new-table</link>
   <description><![CDATA[新しいテーブルが届いた。かわいい。]]></description>
   <content:encoded><![CDATA[<p>新しいテーブルが届いた。かわいい。</p>
 <p><img src="https://i.imgur.com/ix72MiC.jpg" alt="新しいテーブル"></p>
-<p><a href="https://yuki-wd.github.io/articles/2020-12-08-sofa">ソファが届いた記事</a>で書いたように、ソファダイニングのためのテーブル。高さ調節ができるので、良い。</p>
+<p><a href="https://m0r1m0.github.io/articles/2020-12-08-sofa">ソファが届いた記事</a>で書いたように、ソファダイニングのためのテーブル。高さ調節ができるので、良い。</p>
 <p>今回は<a href="https://www.low-ya.com/goods/F706_G1010">LOWYA</a>で買った。見た目かわいいし、高さ調節もできて基本的には満足しているが、当然、脚がくろすしているので、じゃまになることはある。</p>
 <p>本腰入れてここで作業することはないので、まあおｋ。</p>
 ]]></content:encoded>
   <pubDate>Sun, 13 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-12-cauliflower-gratin</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-12-cauliflower-gratin</guid>
   <title>カリフラワーグラタンを作った</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-12-cauliflower-gratin</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-12-cauliflower-gratin</link>
   <description><![CDATA[ばあちゃんから貰ったオレンジ色のカリフラワーでグラタンを作った。]]></description>
   <content:encoded><![CDATA[<p>ばあちゃんから貰ったオレンジ色のカリフラワーでグラタンを作った。</p>
 <p><img src="https://i.imgur.com/EtOWZyd.jpg" alt="カリフラワーグラタン" title="カリフラワーグラタン"></p>
@@ -175,9 +175,9 @@
 ]]></content:encoded>
   <pubDate>Sat, 12 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-11-buta-komatuna-tamago</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-11-buta-komatuna-tamago</guid>
   <title>🥚 ➕ 🐷 ➕ 🥬</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-11-buta-komatuna-tamago</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-11-buta-komatuna-tamago</link>
   <description><![CDATA[ばあちゃんから貰ったものシリーズ。小松菜があまってたので、今日やすかった豚肉と卵でてきとーなレシピを検索して作った。まあ、うまかった。]]></description>
   <content:encoded><![CDATA[<p>ばあちゃんから貰ったものシリーズ。小松菜があまってたので、今日やすかった豚肉と卵でてきとーなレシピを検索して作った。まあ、うまかった。</p>
 <p><img src="https://i.imgur.com/0QRxplu.jpg" alt="豚と小松菜と卵の炒めもの" title="豚と小松菜と卵の炒めもの"></p>
@@ -185,9 +185,9 @@
 ]]></content:encoded>
   <pubDate>Fri, 11 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-10-tonteki</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-10-tonteki</guid>
   <title>トンテキ🐷</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-10-tonteki</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-10-tonteki</link>
   <description><![CDATA[冷凍してた豚ロースがあったので、トンテキ作った。相変わらず野菜がないが、うまければそれでいい。]]></description>
   <content:encoded><![CDATA[<p>冷凍してた豚ロースがあったので、トンテキ作った。相変わらず野菜がないが、うまければそれでいい。</p>
 <p><img src="https://i.imgur.com/lBARgzm.jpg" alt="トンテキ"></p>
@@ -195,9 +195,9 @@
 ]]></content:encoded>
   <pubDate>Thu, 10 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-09-miso-soup</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-09-miso-soup</guid>
   <title>南蛮海老のみそ汁の素🍤</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-09-miso-soup</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-09-miso-soup</link>
   <description><![CDATA[[南蛮海老のみそ汁の素](https://www.kaldi.co.jp/ec/pro/disp/1/4571347775525)でみそ汁を作った。めっちゃエビ。めっちゃうまい。]]></description>
   <content:encoded><![CDATA[<p><a href="https://www.kaldi.co.jp/ec/pro/disp/1/4571347775525">南蛮海老のみそ汁の素</a>でみそ汁を作った。めっちゃエビ。めっちゃうまい。</p>
 <p><img src="https://i.imgur.com/CUzUqz5.jpg" alt="南蛮海老のみそ汁の素" title="南蛮海老のみそ汁の素">
@@ -208,9 +208,9 @@
 ]]></content:encoded>
   <pubDate>Wed, 09 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-08-sofa</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-08-sofa</guid>
   <title>新しいソファが届いた🛋</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-08-sofa</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-08-sofa</link>
   <description><![CDATA[新しいソファが届いた。めちゃかわ。[大川家具のPURI](https://www.amazon.co.jp/dp/B00TAT68DK/ref=cm_sw_em_r_mt_dp_YC5ZFbBK4GXF4)という二人がけソファを買った。]]></description>
   <content:encoded><![CDATA[<p>新しいソファが届いた。めちゃかわ。<a href="https://www.amazon.co.jp/dp/B00TAT68DK/ref=cm_sw_em_r_mt_dp_YC5ZFbBK4GXF4">大川家具のPURI</a>という二人がけソファを買った。</p>
 <p><img src="https://i.imgur.com/HLp7O8U.jpg" alt="ソファ"></p>
@@ -221,9 +221,9 @@
 ]]></content:encoded>
   <pubDate>Tue, 08 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-07-hakusai-to-torimune</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-07-hakusai-to-torimune</guid>
   <title>白菜と鶏むね</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-07-hakusai-to-torimune</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-07-hakusai-to-torimune</link>
   <description><![CDATA[スーパーで安い肉が鶏むねしかなかったので、余ってた白菜でなんか作った。うんまかった。]]></description>
   <content:encoded><![CDATA[<p>スーパーで安い肉が鶏むねしかなかったので、余ってた白菜でなんか作った。うんまかった。</p>
 <p><img src="https://i.imgur.com/T2oQd8ah.jpg" alt="鶏むね肉と白菜の中華風とろうま煮"></p>
@@ -232,9 +232,9 @@
 ]]></content:encoded>
   <pubDate>Mon, 07 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
-  <guid>https://yuki-wd.github.io/articles/2020-12-06-quiche</guid>
+  <guid>https://m0r1m0.github.io/articles/2020-12-06-quiche</guid>
   <title>キッシュつくった</title>
-  <link>https://yuki-wd.github.io/articles/2020-12-06-quiche</link>
+  <link>https://m0r1m0.github.io/articles/2020-12-06-quiche</link>
   <description><![CDATA[ばあちゃんからほうれん草とカリフラワーをもらった＆生クリームが余っていたのでキッシュを作った。]]></description>
   <content:encoded><![CDATA[<p>ばあちゃんからほうれん草とカリフラワーをもらった＆生クリームが余っていたのでキッシュを作った。</p>
 <p><img src="https://i.imgur.com/BC4EDxKh.jpg" alt="quiche"></p>
