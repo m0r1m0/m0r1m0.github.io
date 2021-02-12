@@ -33,7 +33,7 @@ async function main() {
     `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>morimo</title>
-    <link>https://yuki-wd.github.io</link>
+    <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
     ${
@@ -51,9 +51,9 @@ async function main() {
 
 function generateRssItem(article) {
   return `<item>
-  <guid>https://yuki-wd.github.io/articles/${article.id}</guid>
+  <guid>https://m0r1m0.github.io/articles/${article.id}</guid>
   <title>${article.title}</title>
-  <link>https://yuki-wd.github.io/articles/${article.id}</link>
+  <link>https://m0r1m0.github.io/articles/${article.id}</link>
   <description><![CDATA[${article.ogp.description}]]></description>
   <content:encoded><![CDATA[${article.content}]]></content:encoded>
   ${
