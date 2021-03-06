@@ -16,13 +16,13 @@ git log --numstat --pretty="%H" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+
 
 > Similar to `--stat`, but shows number of added and deleted lines in decimal notation and pathname without abbreviation, to make it more machine friendly. For binary files, outputs two `-` instead of saying `0 0`.
 
-https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat
+[--numstat｜https://git-scm.com](https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat)
 
 `--stat`？
 
 > Generate a diffstat.
 
-https://git-scm.com/docs/git-log#Documentation/git-log.txt---statltwidthgtltname-widthgtltcountgt
+[--stat｜https://git-scm.com](https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat)
 
 diffstatはdiff結果から各ファイルの追加・削除行数をまとめて出してくれるやつぽい。
 
@@ -50,7 +50,7 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 ## `awk`
 
 空白もしくは`-F`オプションで指定した正規表現にマッチする文字で区切られた文字列を処理するコマンド。
-https://www.atmarkit.co.jp/ait/articles/1706/02/news017.html
+[【 awk 】コマンド（基本編）――テキストの加工とパターン処理を行う](https://www.atmarkit.co.jp/ait/articles/1706/02/news017.html)
 
 `パターン{アクション}`の形式で指定した処理をしていく。
 
