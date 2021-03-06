@@ -24,7 +24,7 @@ export function getArticles(): Article[] {
     .readdirSync(articlesDirectory, {
       withFileTypes: true,
     })
-    .filter((dirent) => dirent.isFile && path.extname(dirent.name) === ".md")
+    .filter((dirent) => dirent.isFile() && path.extname(dirent.name) === ".md")
     .map((d) => d.name);
 
   return fileNames
