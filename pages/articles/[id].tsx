@@ -4,6 +4,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { getArticleIds, getArticle } from "../../lib/articles";
 import { ParsedUrlQuery } from "querystring";
 import styles from "./detail.module.css";
+import "highlight.js/styles/github.css";
 
 interface DetailProps {
   date: string | null;
