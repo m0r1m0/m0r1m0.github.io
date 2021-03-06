@@ -6,6 +6,7 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-size: 18px;
   color: #222222;
+  line-height: 1.5em;
 }
 
 * {
@@ -21,4 +22,12 @@ blockquote {
   padding-left: 1em;
   border-left: 4px solid #4e4e4e;
   color: #4e4e4e;
+}
+
+code {
+  background: #eeeeec;
+  color: #eb5757;
+  border-radius: 3px;
+  font-size: 85%;
+  padding: 0.2em 0.4em;
 }
