@@ -4,8 +4,55 @@
     <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Mon, 22 Feb 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 06 Mar 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://m0r1m0.github.io/articles/2021-03-06-git-lines-changed</guid>
+  <title>ブランチ間の変更行数を出す</title>
+  <link>https://m0r1m0.github.io/articles/2021-03-06-git-lines-changed</link>
+  <description><![CDATA[ってググればでる。]]></description>
+  <content:encoded><![CDATA[<p>ってググればでる。</p>
+<pre><code class="language-bash">git log --numstat --pretty="%H" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
+</code></pre>
+<p>参考：<a href="https://stackoverflow.com/questions/2528111/how-can-i-calculate-the-number-of-lines-changed-between-two-commits-in-git/2528129#2528129">How can I calculate the number of lines changed between two commits in Git?</a></p>
+<p>ただ内容が理解できないし、理解できていないのはキモいので紐解く。</p>
+<h2><code>--numstat</code></h2>
+<blockquote>
+<p>Similar to <code>--stat</code>, but shows number of added and deleted lines in decimal notation and pathname without abbreviation, to make it more machine friendly. For binary files, outputs two <code>-</code> instead of saying <code>0 0</code>.</p>
+</blockquote>
+<p>https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat</p>
+<p><code>--stat</code>？</p>
+<blockquote>
+<p>Generate a diffstat.</p>
+</blockquote>
+<p>https://git-scm.com/docs/git-log#Documentation/git-log.txt---statltwidthgtltname-widthgtltcountgt</p>
+<p>diffstatはdiff結果から各ファイルの追加・削除行数をまとめて出してくれるやつぽい。</p>
+<p>つまり、<code>—numstat</code>はそのdiffstatを<code>追加行数 削除行数 ファイルパス</code>形式で出力してくれる。</p>
+<h2><code>--pretty</code></h2>
+<p>コミットログをprettyで指定した形式で表示する。例えば、<code>%H</code> はコミットハッシュ。</p>
+<p>つまり、<code>git log —numstat —pretty="%H"</code> は以下のような出力になる</p>
+<pre><code class="language-bash">f7cc64ff097f165df3ac457acac183f377acdc0c
+
+16      0       package-lock.json
+2       1       package.json
+34      21      src/index.ts
+e6490bc5ec9da0da9419acfc28186638e9ad6255
+
+1       1       README.md
+</code></pre>
+<p>で、次はパイプ以降何をしているのか見ていく。</p>
+<h2><code>awk</code></h2>
+<p>空白もしくは<code>-F</code>オプションで指定した正規表現にマッチする文字で区切られた文字列を処理するコマンド。
+https://www.atmarkit.co.jp/ait/articles/1706/02/news017.html</p>
+<p><code>パターン{アクション}</code>の形式で指定した処理をしていく。</p>
+<p>例えば、<code>NF==3 {plus+=$1; minus+=$2}</code>のパターン<code>NF==3</code>は、空白で区切られた文字列の数が3つの行を指す。<code>—-numstat</code> は追加行数、削除行数、ファイルパスが空白で区切られてるので、一致する。つまり、追加行数、削除行数、ファイルパスの行で、plus、minusという変数に追加・削除行数を足し込む、という処理になる。</p>
+<p>また、ENDは最終行のあと、というパターン。つまり、<code>END {printf("+%d, -%d\n", plus, minus)}</code>は最終行まで処理したあと、<code>"+%d, -%d\n"</code>形式でそれぞれ追加行数、削除行数を出力するという処理になる。</p>
+<p>なるほど、たしかに<code>git log --numstat --pretty="%H" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</code>がブランチ間の変更行数を出すことがわかった。</p>
+<p>ただ、<code>--pretty</code>でわざわざ<code>%H</code>とする必要性はないように思う。コミットハッシュは最終的な出力に関係ないので。コミットに関する情報は消して、各ファイルの変更行数情報だけが出力されればおｋである。つまり、完成形としては、以下のようになる。</p>
+<pre><code class="language-bash">git log --numstat --pretty="" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
+</code></pre>
+]]></content:encoded>
+  <pubDate>Sat, 06 Mar 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://m0r1m0.github.io/articles/2021-02-22-buri</guid>
   <title>ぶり🐟しゃぶ</title>
   <link>https://m0r1m0.github.io/articles/2021-02-22-buri</link>
@@ -231,17 +278,6 @@
 <p>12日にはテーブルが届く予定なので、楽しみ。</p>
 ]]></content:encoded>
   <pubDate>Tue, 08 Dec 2020 00:00:00 GMT</pubDate>
-</item><item>
-  <guid>https://m0r1m0.github.io/articles/2020-12-07-hakusai-to-torimune</guid>
-  <title>白菜と鶏むね</title>
-  <link>https://m0r1m0.github.io/articles/2020-12-07-hakusai-to-torimune</link>
-  <description><![CDATA[スーパーで安い肉が鶏むねしかなかったので、余ってた白菜でなんか作った。うんまかった。]]></description>
-  <content:encoded><![CDATA[<p>スーパーで安い肉が鶏むねしかなかったので、余ってた白菜でなんか作った。うんまかった。</p>
-<p><img src="https://i.imgur.com/T2oQd8ah.jpg" alt="鶏むね肉と白菜の中華風とろうま煮"></p>
-<p>栄養を考えてメシを作ったことがないので、来年は栄養素を考えた健康的な食事ができるように意識していきたい。</p>
-<p>今日のレシピは、<a href="https://oceans-nadia.com/user/22780/recipe/203036">重ねて放置 ♪ お肉柔らか『鶏むね肉と白菜の中華風 ♡ とろうま煮』</a></p>
-]]></content:encoded>
-  <pubDate>Mon, 07 Dec 2020 00:00:00 GMT</pubDate>
 </item>
   </channel>
 </rss>
