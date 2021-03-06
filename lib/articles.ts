@@ -4,6 +4,7 @@ import path from "path";
 import remark from "remark";
 import html from "remark-html";
 import { parse } from "./frontmatter";
+import highlight from "remark-highlight.js";
 
 const articlesDirectory = path.join(process.cwd(), "articles");
 
@@ -80,6 +81,7 @@ export async function getArticle(id: string): Promise<Article | null> {
     return null;
   }
   const processedContent = await remark()
+    .use(highlight)
     .use(html)
     .process(parsedMarkdown.markdown);
   return {
