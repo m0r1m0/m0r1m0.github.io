@@ -19,12 +19,12 @@
 <blockquote>
 <p>Similar to <code>--stat</code>, but shows number of added and deleted lines in decimal notation and pathname without abbreviation, to make it more machine friendly. For binary files, outputs two <code>-</code> instead of saying <code>0 0</code>.</p>
 </blockquote>
-<p>https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat</p>
+<p><a href="https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat">--numstat｜https://git-scm.com</a></p>
 <p><code>--stat</code>？</p>
 <blockquote>
 <p>Generate a diffstat.</p>
 </blockquote>
-<p>https://git-scm.com/docs/git-log#Documentation/git-log.txt---statltwidthgtltname-widthgtltcountgt</p>
+<p><a href="https://git-scm.com/docs/git-log#Documentation/git-log.txt---numstat">--stat｜https://git-scm.com</a></p>
 <p>diffstatはdiff結果から各ファイルの追加・削除行数をまとめて出してくれるやつぽい。</p>
 <p>つまり、<code>—numstat</code>はそのdiffstatを<code>追加行数 削除行数 ファイルパス</code>形式で出力してくれる。</p>
 <h2><code>--pretty</code></h2>
@@ -42,7 +42,7 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 <p>で、次はパイプ以降何をしているのか見ていく。</p>
 <h2><code>awk</code></h2>
 <p>空白もしくは<code>-F</code>オプションで指定した正規表現にマッチする文字で区切られた文字列を処理するコマンド。
-https://www.atmarkit.co.jp/ait/articles/1706/02/news017.html</p>
+<a href="https://www.atmarkit.co.jp/ait/articles/1706/02/news017.html">【 awk 】コマンド（基本編）――テキストの加工とパターン処理を行う</a></p>
 <p><code>パターン{アクション}</code>の形式で指定した処理をしていく。</p>
 <p>例えば、<code>NF==3 {plus+=$1; minus+=$2}</code>のパターン<code>NF==3</code>は、空白で区切られた文字列の数が3つの行を指す。<code>—-numstat</code> は追加行数、削除行数、ファイルパスが空白で区切られてるので、一致する。つまり、追加行数、削除行数、ファイルパスの行で、plus、minusという変数に追加・削除行数を足し込む、という処理になる。</p>
 <p>また、ENDは最終行のあと、というパターン。つまり、<code>END {printf("+%d, -%d\n", plus, minus)}</code>は最終行まで処理したあと、<code>"+%d, -%d\n"</code>形式でそれぞれ追加行数、削除行数を出力するという処理になる。</p>
