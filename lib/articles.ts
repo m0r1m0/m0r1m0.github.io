@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import remark from "remark";
 import html from "remark-html";
+import gfm from "remark-gfm";
 import { parse } from "./frontmatter";
 import highlight from "remark-highlight.js";
 
@@ -81,6 +82,7 @@ export async function getArticle(id: string): Promise<Article | null> {
     return null;
   }
   const processedContent = await remark()
+    .use(gfm)
     .use(highlight)
     .use(html)
     .process(parsedMarkdown.markdown);
