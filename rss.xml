@@ -202,7 +202,7 @@ DELETE FROM task_hierarchie
 WHERE parent_id = 4;
 </code></pre>
 <h2>入れ子集合</h2>
-<p>後で書きます。</p>
+<p>後で書く。</p>
 <p><a href="https://mickindex.sakura.ne.jp/database/db_tree_ns.html">SQLで木と階層構造のデータを扱う（１）―― 入れ子集合モデル</a></p>
 <h2>まとめ</h2>
 <p>隣接リストは、階層上限がある、かつ深くならない場合において利用できる。が、しかし上限を深くしたくなったときにキツイ。</p>
