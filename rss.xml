@@ -4,8 +4,214 @@
     <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 06 Mar 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://m0r1m0.github.io/articles/2021-03-21-db-tree</guid>
+  <title>RDBで階層構造をあつかう</title>
+  <link>https://m0r1m0.github.io/articles/2021-03-21-db-tree</link>
+  <description><![CDATA[例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。]]></description>
+  <content:encoded><![CDATA[<p>例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。</p>
+<p>よく知られている手法としては以下の４つがある</p>
+<ul>
+<li>隣接リスト</li>
+<li>経路列挙</li>
+<li>閉包テーブル</li>
+<li>入れ子集合</li>
+</ul>
+<p>それぞれの手法において、タスクの取得、追加、削除がどういうクエリになるのか見ていく。</p>
+<h2>隣接リスト</h2>
+<p>自分の親タスクのIDを保持する設計</p>
+<p>|id|name|parent_id|
+|---|---|---|
+|1|買い物|null|
+|2|じゃがいも|1|
+|3|にんじん|1|
+|4|掃除|null|
+|5|風呂|4|
+|6|浴槽|5|
+|7|換気扇|5|
+|8|洗面台|4|
+|9|読書|null|</p>
+<h3>タスクの取得</h3>
+<p>例えば<code>掃除</code>タスク(id = 4)に紐づくタスクの取得は以下のようなクエリになる</p>
+<pre><code class="language-sql">SELECT
+	*
+FROM
+	tasks t1
+	LEFT OUTER JOIN tasks t2 ON t1.id = t2.parent_id
+	LEFT OUTER JOIN tasks t3 ON t2.id = t3.parent_id
+WHERE
+	t1.id = 4;
+</code></pre>
+<p>このクエリは、そのタスクが最大何階層あるのかを事前に知っておく必要がある、という問題がある。子タスクのネストに制限がない場合、このクエリは現実的ではない。つまり、1クエリで全取得はできない。</p>
+<p>事前に何階層あるかを知らない場合、<code>parent_id</code>にヒットしたレコードのidをいれてヒットしなくなるまで検索していく方法で取得できる。</p>
+<pre><code class="language-sql">select * from tasks where parent_id = 4; -- id 5, 8がヒット
+
+select * from tasks where parent_id in (5, 8); -- id 6, 7がヒット
+
+select * from tasks where parent_id in (6, 7); -- ヒットなし
+</code></pre>
+<p>この方法では、階層が増えれば増えるほどクエリ実行が多くなってしまう。</p>
+<h3>タスクの追加</h3>
+<p>親を指定して足すだけなので特に面倒なポイントはない。</p>
+<p>親タスクの追加</p>
+<pre><code class="language-sql">insert into tasks (name, parent_id)
+		values("勉強", NULL);
+</code></pre>
+<p>子タスクの追加</p>
+<pre><code class="language-sql">insert into tasks (name, parent_id)
+		values("排水溝", 5);
+</code></pre>
+<h3>タスクの更新</h3>
+<p>親タスクを変更する場合、parent_idを書き換えるだけなので面倒ポイントなし。</p>
+<pre><code class="language-sql">update tasks set parent_id = 4 where id = 11
+</code></pre>
+<h3>タスクの削除</h3>
+<p>子を持つ親タスクの削除で、子も含めて削除する場合を考える。そのタスクが持つ子タスクを知る必要があるので、取得と同様、ヒットしなくなるまで検索して子タスクのidを調べる必要がある。</p>
+<pre><code class="language-sql">select * from tasks where parent_id = 4; -- id 5, 8がヒット
+
+select * from tasks where parent_id in (5, 8); -- id 6, 7がヒット
+
+select * from tasks where parent_id in (6, 7); -- ヒットなし
+
+delete from tasks where id in (4, 5, 8, 6, 7);
+</code></pre>
+<p>ただし、<code>parent_id</code>に外部キー制約で<code>ON DELETE CASCADE</code>を設定しておけば、親を消した段階ですべて消える</p>
+<pre><code class="language-sql">ALTER TABLE tasks
+	ADD FOREIGN KEY (`parent_id`) REFERENCES tasks (`id`) ON DELETE CASCADE;
+
+delete from tasks where id = 4;
+</code></pre>
+<h3>再帰クエリ</h3>
+<p>再帰クエリを利用すれば、取得クエリの数は減る。詳細は後日書く。</p>
+<p><a href="http://interprism.hatenablog.com/entry/fetch-tree-by-recursive-query">再帰クエリで木構造のデータを取得する</a></p>
+<h2>経路列挙</h2>
+<p>rootまでの経路を<code>/</code>などの文字列で区切って保持する設計</p>
+<p>|id|name|path|
+|---|---|---|
+|1|買い物|1|
+|2|じゃがいも|1/2|
+|3|にんじん|1/3|
+|4|掃除|4|
+|5|風呂|4/5|
+|6|浴槽|4/5/6|
+|7|換気扇|4/5/7|
+|8|洗面台|4/8|
+|9|読書|9|</p>
+<h3>タスクの取得</h3>
+<p>例えば<code>掃除</code>タスク(id = 4)に紐づくタスクの取得は以下のようなクエリになる</p>
+<pre><code class="language-sql">SELECT
+	*
+FROM
+	tasks2
+WHERE
+	`path` LIKE '4'
+	OR `path` LIKE '4/%'
+</code></pre>
+<h3>タスクの追加</h3>
+<p>親タスクの追加。<code>id</code>が<code>auto_increment</code>の場合、まずはpathなしでinsertし、採番されたIDを確認してupdateをかける方法が考えられる。（他になにかいい感じにやれる方法あるんだろうか？）</p>
+<pre><code class="language-sql">INSERT INTO tasks2 (`name`)
+		VALUES("親タスク"); -- id 10が採番された
+UPDATE tasks2 SET `path` = '10' WHERE id = 10;
+</code></pre>
+<p>子タスク追加は、親になるタスクの<code>path</code>に自分のidを追加して保存すれば良い。クエリは↑と同様。</p>
+<h3>タスクの削除</h3>
+<p>親とそれに関連する子すべてを削除する場合を考える。</p>
+<pre><code class="language-sql">DELETE FROM tasks2
+WHERE `path` = '4'
+	OR `path` LIKE '4/%'
+</code></pre>
+<p>手軽に消せる。</p>
+<h2>閉包テーブル</h2>
+<p>親子関係を専用のテーブルで管理する設計。具体的には、以下のようなタスクがあるとき</p>
+<p>|id|name|
+|---|---|
+|1|買い物|
+|2|じゃがいも|
+|3|にんじん|
+|4|掃除|
+|5|風呂|
+|6|浴槽|
+|7|換気扇|
+|8|洗面台|
+|9|読書|</p>
+<p>親子関係全パターン(直接の親子だけではない)を管理するテーブルを用意する。</p>
+<p>|parent_id|child_id|
+|---|---|
+|1|1|
+|1|2|
+|1|3|
+|4|4|
+|4|5|
+|4|6|
+|4|7|
+|4|8|
+|5|5|
+|5|6|
+|5|7|
+|6|6|
+|7|7|
+|8|8|
+|9|9|</p>
+<h3>タスクの取得</h3>
+<p><code>掃除</code>タスク(id = 4)に紐づくタスクの取得</p>
+<pre><code class="language-sql">SELECT
+	*
+FROM
+	tasks3 AS t
+	INNER JOIN task_hierarchie AS h ON t.id = h.child_id
+WHERE
+	h.parent_id = 4;
+</code></pre>
+<p>閉包テーブル(<code>task_hierarchie</code>)の<code>parent_id</code>=4を探すだけでいい。</p>
+<h3>タスク追加</h3>
+<p>一番上の階層にタスクを足す場合</p>
+<pre><code class="language-sql">INSERT INTO tasks (`name`)
+		VALUES("散歩");
+INSERT INTO task_hierarchie
+		VALUES(10, 10);
+</code></pre>
+<p>子タスクの追加。子タスク自身のidと、子を足す対象の親全てに子のidを足す。例えば、掃除/風呂(id=5)の子に排水溝を足す場合、親である、掃除(id=4)と風呂(id=5)それぞれに排水溝のidのパターンを追加する。また</p>
+<p>対象のすべての親を探すとき、<code>task_hierarchie</code>の<code>child_id</code>が対象idと一致の条件で検索すればよい。</p>
+<pre><code class="language-sql">INSERT INTO tasks (`name`)
+		VALUES("排水溝"); -- id=10
+
+INSERT INTO task_hierarchie
+SELECT
+	h.parent_id,
+	10
+FROM
+	task_hierarchie AS h
+WHERE
+	h.child_id = 5
+UNION ALL
+SELECT
+	10,
+	10;
+</code></pre>
+<h3>タスク削除</h3>
+<p>掃除タスク(id=4)を削除する場合</p>
+<pre><code class="language-sql">DELETE FROM tasks3
+WHERE id IN(
+		SELECT
+			child_id FROM task_hierarchie
+		WHERE
+			parent_id = 4);
+
+DELETE FROM task_hierarchie
+WHERE parent_id = 4;
+</code></pre>
+<h2>入れ子集合</h2>
+<p>後で書きます。</p>
+<p><a href="https://mickindex.sakura.ne.jp/database/db_tree_ns.html">SQLで木と階層構造のデータを扱う（１）―― 入れ子集合モデル</a></p>
+<h2>まとめ</h2>
+<p>隣接リストは、階層上限がある、かつ深くならない場合において利用できる。が、しかし上限を深くしたくなったときにキツイ。</p>
+<p>経路列挙は経路が文字列で、正しくないパスがinsertされてしまう可能性を考えるとキツイ。また、auto_incrementのとき一度insertしてidを確認してupdateする必要があるのも面倒。</p>
+<p>閉包テーブルはデータ量が多くなってしまいがちだが、手間なく各種操作ができるので有用に感じた。</p>
+<p>個人的に作成しているアプリケーションで階層構造を考える必要があり、調べてみた。要件として上限が決まっている、かつ浅いので隣接リストか閉包テーブルを利用するのが妥当と判断。使い勝手と今後上限をなくしても問題ないことから、最終的には閉包テーブルを選択した。</p>
+]]></content:encoded>
+  <pubDate>Sun, 21 Mar 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://m0r1m0.github.io/articles/2021-03-06-git-lines-changed</guid>
   <title>ブランチ間の変更行数を出す</title>
   <link>https://m0r1m0.github.io/articles/2021-03-06-git-lines-changed</link>
@@ -265,19 +471,6 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 まだまだ大根余ってるので、鍋とかしようかな。。</p>
 ]]></content:encoded>
   <pubDate>Wed, 09 Dec 2020 00:00:00 GMT</pubDate>
-</item><item>
-  <guid>https://m0r1m0.github.io/articles/2020-12-08-sofa</guid>
-  <title>新しいソファが届いた🛋</title>
-  <link>https://m0r1m0.github.io/articles/2020-12-08-sofa</link>
-  <description><![CDATA[新しいソファが届いた。めちゃかわ。[大川家具のPURI](https://www.amazon.co.jp/dp/B00TAT68DK/ref=cm_sw_em_r_mt_dp_YC5ZFbBK4GXF4)という二人がけソファを買った。]]></description>
-  <content:encoded><![CDATA[<p>新しいソファが届いた。めちゃかわ。<a href="https://www.amazon.co.jp/dp/B00TAT68DK/ref=cm_sw_em_r_mt_dp_YC5ZFbBK4GXF4">大川家具のPURI</a>という二人がけソファを買った。</p>
-<p><img src="https://i.imgur.com/HLp7O8U.jpg" alt="ソファ"></p>
-<p>これが以前使っていたソファ。３年前新卒で東京に引っ越してきたときに買ったもので、ヘタってしまって座ると固くお尻が痛いレベルだった。</p>
-<p><img src="https://i.imgur.com/rzti8bH.jpg" alt="古いソファ"></p>
-<p>うちにはダイニングテーブル・チェアがないので、食事は地べたに座ってソファの前のローテーブルで食べる、という方式だったが、寒いしケツもいたいので、ソファダイニングにしようと思い、まずはソファを買った。</p>
-<p>12日にはテーブルが届く予定なので、楽しみ。</p>
-]]></content:encoded>
-  <pubDate>Tue, 08 Dec 2020 00:00:00 GMT</pubDate>
 </item>
   </channel>
 </rss>

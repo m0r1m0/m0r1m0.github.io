@@ -1,0 +1,193 @@
+<!DOCTYPE html><html><head><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-N6MC6SMGJM"></script><script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-N6MC6SMGJM', {
+              page_path: window.location.pathname,
+            });
+          </script><link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml"/><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>RDBで階層構造をあつかう</title><meta property="og:title" content="RDBで階層構造をあつかう"/><meta property="og:description" content="例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。"/><meta name="twitter:card" content="summary"/><meta name="next-head-count" content="6"/><link rel="preload" href="/_next/static/css/1e8ccdab538ecc583dd2.css" as="style"/><link rel="stylesheet" href="/_next/static/css/1e8ccdab538ecc583dd2.css" data-n-g=""/><link rel="preload" href="/_next/static/css/8c35c68098dd8759f6c1.css" as="style"/><link rel="stylesheet" href="/_next/static/css/8c35c68098dd8759f6c1.css" data-n-p=""/><noscript data-n-css=""></noscript><link rel="preload" href="/_next/static/chunks/main-1aebe1c5ebad78b6eefd.js" as="script"/><link rel="preload" href="/_next/static/chunks/webpack-e067438c4cf4ef2ef178.js" as="script"/><link rel="preload" href="/_next/static/chunks/framework.2113c6061a2f456066a1.js" as="script"/><link rel="preload" href="/_next/static/chunks/commons.040a3874e38b7cc6b430.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/_app-5874fa266a7d44909009.js" as="script"/><link rel="preload" href="/_next/static/chunks/c5b568cee8545d966ddc8d89f9063461e084494a.bb32f9c4396722e794d4.js" as="script"/><link rel="preload" href="/_next/static/chunks/pages/articles/%5Bid%5D-16081245fdd7df34b03c.js" as="script"/></head><body><div id="__next"><div class="layout_container__2t4v2"><header class="layout_header__2rhWq"><h1 class="layout_title__24-9Z"><a href="/">🌳MORIMO🌳</a></h1></header><main><article class="detail_article__3SXso"><div><span>2021年03月21日</span><h1>RDBで階層構造をあつかう</h1></div><div><p>例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。</p>
+<p>よく知られている手法としては以下の４つがある</p>
+<ul>
+<li>隣接リスト</li>
+<li>経路列挙</li>
+<li>閉包テーブル</li>
+<li>入れ子集合</li>
+</ul>
+<p>それぞれの手法において、タスクの取得、追加、削除がどういうクエリになるのか見ていく。</p>
+<h2>隣接リスト</h2>
+<p>自分の親タスクのIDを保持する設計</p>
+<p>|id|name|parent_id|
+|---|---|---|
+|1|買い物|null|
+|2|じゃがいも|1|
+|3|にんじん|1|
+|4|掃除|null|
+|5|風呂|4|
+|6|浴槽|5|
+|7|換気扇|5|
+|8|洗面台|4|
+|9|読書|null|</p>
+<h3>タスクの取得</h3>
+<p>例えば<code>掃除</code>タスク(id = 4)に紐づくタスクの取得は以下のようなクエリになる</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span>
+	<span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span>
+	tasks t1
+	<span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> tasks t2 <span class="hljs-keyword">ON</span> t1.id <span class="hljs-operator">=</span> t2.parent_id
+	<span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">OUTER</span> <span class="hljs-keyword">JOIN</span> tasks t3 <span class="hljs-keyword">ON</span> t2.id <span class="hljs-operator">=</span> t3.parent_id
+<span class="hljs-keyword">WHERE</span>
+	t1.id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>;</code></pre>
+<p>このクエリは、そのタスクが最大何階層あるのかを事前に知っておく必要がある、という問題がある。子タスクのネストに制限がない場合、このクエリは現実的ではない。つまり、1クエリで全取得はできない。</p>
+<p>事前に何階層あるかを知らない場合、<code>parent_id</code>にヒットしたレコードのidをいれてヒットしなくなるまで検索していく方法で取得できる。</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> parent_id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>; <span class="hljs-comment">-- id 5, 8がヒット</span>
+
+<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> parent_id <span class="hljs-keyword">in</span> (<span class="hljs-number">5</span>, <span class="hljs-number">8</span>); <span class="hljs-comment">-- id 6, 7がヒット</span>
+
+<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> parent_id <span class="hljs-keyword">in</span> (<span class="hljs-number">6</span>, <span class="hljs-number">7</span>); <span class="hljs-comment">-- ヒットなし</span></code></pre>
+<p>この方法では、階層が増えれば増えるほどクエリ実行が多くなってしまう。</p>
+<h3>タスクの追加</h3>
+<p>親を指定して足すだけなので特に面倒なポイントはない。</p>
+<p>親タスクの追加</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tasks (name, parent_id)
+		<span class="hljs-keyword">values</span>("勉強", <span class="hljs-keyword">NULL</span>);</code></pre>
+<p>子タスクの追加</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> tasks (name, parent_id)
+		<span class="hljs-keyword">values</span>("排水溝", <span class="hljs-number">5</span>);</code></pre>
+<h3>タスクの更新</h3>
+<p>親タスクを変更する場合、parent_idを書き換えるだけなので面倒ポイントなし。</p>
+<pre><code class="hljs language-sql">update tasks <span class="hljs-keyword">set</span> parent_id <span class="hljs-operator">=</span> <span class="hljs-number">4</span> <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">11</span></code></pre>
+<h3>タスクの削除</h3>
+<p>子を持つ親タスクの削除で、子も含めて削除する場合を考える。そのタスクが持つ子タスクを知る必要があるので、取得と同様、ヒットしなくなるまで検索して子タスクのidを調べる必要がある。</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> parent_id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>; <span class="hljs-comment">-- id 5, 8がヒット</span>
+
+<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> parent_id <span class="hljs-keyword">in</span> (<span class="hljs-number">5</span>, <span class="hljs-number">8</span>); <span class="hljs-comment">-- id 6, 7がヒット</span>
+
+<span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> parent_id <span class="hljs-keyword">in</span> (<span class="hljs-number">6</span>, <span class="hljs-number">7</span>); <span class="hljs-comment">-- ヒットなし</span>
+
+<span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> id <span class="hljs-keyword">in</span> (<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>);</code></pre>
+<p>ただし、<code>parent_id</code>に外部キー制約で<code>ON DELETE CASCADE</code>を設定しておけば、親を消した段階ですべて消える</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> tasks
+	<span class="hljs-keyword">ADD</span> <span class="hljs-keyword">FOREIGN</span> KEY (`parent_id`) <span class="hljs-keyword">REFERENCES</span> tasks (`id`) <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> CASCADE;
+
+<span class="hljs-keyword">delete</span> <span class="hljs-keyword">from</span> tasks <span class="hljs-keyword">where</span> id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>;</code></pre>
+<h3>再帰クエリ</h3>
+<p>再帰クエリを利用すれば、取得クエリの数は減る。詳細は後日書く。</p>
+<p><a href="http://interprism.hatenablog.com/entry/fetch-tree-by-recursive-query">再帰クエリで木構造のデータを取得する</a></p>
+<h2>経路列挙</h2>
+<p>rootまでの経路を<code>/</code>などの文字列で区切って保持する設計</p>
+<p>|id|name|path|
+|---|---|---|
+|1|買い物|1|
+|2|じゃがいも|1/2|
+|3|にんじん|1/3|
+|4|掃除|4|
+|5|風呂|4/5|
+|6|浴槽|4/5/6|
+|7|換気扇|4/5/7|
+|8|洗面台|4/8|
+|9|読書|9|</p>
+<h3>タスクの取得</h3>
+<p>例えば<code>掃除</code>タスク(id = 4)に紐づくタスクの取得は以下のようなクエリになる</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span>
+	<span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span>
+	tasks2
+<span class="hljs-keyword">WHERE</span>
+	`path` <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'4'</span>
+	<span class="hljs-keyword">OR</span> `path` <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'4/%'</span></code></pre>
+<h3>タスクの追加</h3>
+<p>親タスクの追加。<code>id</code>が<code>auto_increment</code>の場合、まずはpathなしでinsertし、採番されたIDを確認してupdateをかける方法が考えられる。（他になにかいい感じにやれる方法あるんだろうか？）</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tasks2 (`name`)
+		<span class="hljs-keyword">VALUES</span>("親タスク"); <span class="hljs-comment">-- id 10が採番された</span>
+UPDATE tasks2 <span class="hljs-keyword">SET</span> `path` <span class="hljs-operator">=</span> <span class="hljs-string">'10'</span> <span class="hljs-keyword">WHERE</span> id <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;</code></pre>
+<p>子タスク追加は、親になるタスクの<code>path</code>に自分のidを追加して保存すれば良い。クエリは↑と同様。</p>
+<h3>タスクの削除</h3>
+<p>親とそれに関連する子すべてを削除する場合を考える。</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> tasks2
+<span class="hljs-keyword">WHERE</span> `path` <span class="hljs-operator">=</span> <span class="hljs-string">'4'</span>
+	<span class="hljs-keyword">OR</span> `path` <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'4/%'</span></code></pre>
+<p>手軽に消せる。</p>
+<h2>閉包テーブル</h2>
+<p>親子関係を専用のテーブルで管理する設計。具体的には、以下のようなタスクがあるとき</p>
+<p>|id|name|
+|---|---|
+|1|買い物|
+|2|じゃがいも|
+|3|にんじん|
+|4|掃除|
+|5|風呂|
+|6|浴槽|
+|7|換気扇|
+|8|洗面台|
+|9|読書|</p>
+<p>親子関係全パターン(直接の親子だけではない)を管理するテーブルを用意する。</p>
+<p>|parent_id|child_id|
+|---|---|
+|1|1|
+|1|2|
+|1|3|
+|4|4|
+|4|5|
+|4|6|
+|4|7|
+|4|8|
+|5|5|
+|5|6|
+|5|7|
+|6|6|
+|7|7|
+|8|8|
+|9|9|</p>
+<h3>タスクの取得</h3>
+<p><code>掃除</code>タスク(id = 4)に紐づくタスクの取得</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">SELECT</span>
+	<span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span>
+	tasks3 <span class="hljs-keyword">AS</span> t
+	<span class="hljs-keyword">INNER</span> <span class="hljs-keyword">JOIN</span> task_hierarchie <span class="hljs-keyword">AS</span> h <span class="hljs-keyword">ON</span> t.id <span class="hljs-operator">=</span> h.child_id
+<span class="hljs-keyword">WHERE</span>
+	h.parent_id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>;</code></pre>
+<p>閉包テーブル(<code>task_hierarchie</code>)の<code>parent_id</code>=4を探すだけでいい。</p>
+<h3>タスク追加</h3>
+<p>一番上の階層にタスクを足す場合</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tasks (`name`)
+		<span class="hljs-keyword">VALUES</span>("散歩");
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> task_hierarchie
+		<span class="hljs-keyword">VALUES</span>(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>);</code></pre>
+<p>子タスクの追加。子タスク自身のidと、子を足す対象の親全てに子のidを足す。例えば、掃除/風呂(id=5)の子に排水溝を足す場合、親である、掃除(id=4)と風呂(id=5)それぞれに排水溝のidのパターンを追加する。また</p>
+<p>対象のすべての親を探すとき、<code>task_hierarchie</code>の<code>child_id</code>が対象idと一致の条件で検索すればよい。</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> tasks (`name`)
+		<span class="hljs-keyword">VALUES</span>("排水溝"); <span class="hljs-comment">-- id=10</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> task_hierarchie
+<span class="hljs-keyword">SELECT</span>
+	h.parent_id,
+	<span class="hljs-number">10</span>
+<span class="hljs-keyword">FROM</span>
+	task_hierarchie <span class="hljs-keyword">AS</span> h
+<span class="hljs-keyword">WHERE</span>
+	h.child_id <span class="hljs-operator">=</span> <span class="hljs-number">5</span>
+<span class="hljs-keyword">UNION</span> <span class="hljs-keyword">ALL</span>
+<span class="hljs-keyword">SELECT</span>
+	<span class="hljs-number">10</span>,
+	<span class="hljs-number">10</span>;</code></pre>
+<h3>タスク削除</h3>
+<p>掃除タスク(id=4)を削除する場合</p>
+<pre><code class="hljs language-sql"><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> tasks3
+<span class="hljs-keyword">WHERE</span> id <span class="hljs-keyword">IN</span>(
+		<span class="hljs-keyword">SELECT</span>
+			child_id <span class="hljs-keyword">FROM</span> task_hierarchie
+		<span class="hljs-keyword">WHERE</span>
+			parent_id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>);
+
+<span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> task_hierarchie
+<span class="hljs-keyword">WHERE</span> parent_id <span class="hljs-operator">=</span> <span class="hljs-number">4</span>;</code></pre>
+<h2>入れ子集合</h2>
+<p>後で書きます。</p>
+<p><a href="https://mickindex.sakura.ne.jp/database/db_tree_ns.html">SQLで木と階層構造のデータを扱う（１）―― 入れ子集合モデル</a></p>
+<h2>まとめ</h2>
+<p>隣接リストは、階層上限がある、かつ深くならない場合において利用できる。が、しかし上限を深くしたくなったときにキツイ。</p>
+<p>経路列挙は経路が文字列で、正しくないパスがinsertされてしまう可能性を考えるとキツイ。また、auto_incrementのとき一度insertしてidを確認してupdateする必要があるのも面倒。</p>
+<p>閉包テーブルはデータ量が多くなってしまいがちだが、手間なく各種操作ができるので有用に感じた。</p>
+<p>個人的に作成しているアプリケーションで階層構造を考える必要があり、調べてみた。要件として上限が決まっている、かつ浅いので隣接リストか閉包テーブルを利用するのが妥当と判断。使い勝手と今後上限をなくしても問題ないことから、最終的には閉包テーブルを選択した。</p>
+</div></article></main></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"date":"2021年03月21日","title":"RDBで階層構造をあつかう","content":"\u003cp\u003e例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。\u003c/p\u003e\n\u003cp\u003eよく知られている手法としては以下の４つがある\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e隣接リスト\u003c/li\u003e\n\u003cli\u003e経路列挙\u003c/li\u003e\n\u003cli\u003e閉包テーブル\u003c/li\u003e\n\u003cli\u003e入れ子集合\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eそれぞれの手法において、タスクの取得、追加、削除がどういうクエリになるのか見ていく。\u003c/p\u003e\n\u003ch2\u003e隣接リスト\u003c/h2\u003e\n\u003cp\u003e自分の親タスクのIDを保持する設計\u003c/p\u003e\n\u003cp\u003e|id|name|parent_id|\n|---|---|---|\n|1|買い物|null|\n|2|じゃがいも|1|\n|3|にんじん|1|\n|4|掃除|null|\n|5|風呂|4|\n|6|浴槽|5|\n|7|換気扇|5|\n|8|洗面台|4|\n|9|読書|null|\u003c/p\u003e\n\u003ch3\u003eタスクの取得\u003c/h3\u003e\n\u003cp\u003e例えば\u003ccode\u003e掃除\u003c/code\u003eタスク(id = 4)に紐づくタスクの取得は以下のようなクエリになる\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n\t\u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e\n\ttasks t1\n\t\u003cspan class=\"hljs-keyword\"\u003eLEFT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eOUTER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e tasks t2 \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e t1.id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e t2.parent_id\n\t\u003cspan class=\"hljs-keyword\"\u003eLEFT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eOUTER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e tasks t3 \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e t2.id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e t3.parent_id\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e\n\tt1.id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e;\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eこのクエリは、そのタスクが最大何階層あるのかを事前に知っておく必要がある、という問題がある。子タスクのネストに制限がない場合、このクエリは現実的ではない。つまり、1クエリで全取得はできない。\u003c/p\u003e\n\u003cp\u003e事前に何階層あるかを知らない場合、\u003ccode\u003eparent_id\u003c/code\u003eにヒットしたレコードのidをいれてヒットしなくなるまで検索していく方法で取得できる。\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eselect\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e parent_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e; \u003cspan class=\"hljs-comment\"\u003e-- id 5, 8がヒット\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003eselect\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e parent_id \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e (\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e); \u003cspan class=\"hljs-comment\"\u003e-- id 6, 7がヒット\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003eselect\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e parent_id \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e (\u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e); \u003cspan class=\"hljs-comment\"\u003e-- ヒットなし\u003c/span\u003e\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eこの方法では、階層が増えれば増えるほどクエリ実行が多くなってしまう。\u003c/p\u003e\n\u003ch3\u003eタスクの追加\u003c/h3\u003e\n\u003cp\u003e親を指定して足すだけなので特に面倒なポイントはない。\u003c/p\u003e\n\u003cp\u003e親タスクの追加\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003einsert\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003einto\u003c/span\u003e tasks (name, parent_id)\n\t\t\u003cspan class=\"hljs-keyword\"\u003evalues\u003c/span\u003e(\"勉強\", \u003cspan class=\"hljs-keyword\"\u003eNULL\u003c/span\u003e);\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e子タスクの追加\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003einsert\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003einto\u003c/span\u003e tasks (name, parent_id)\n\t\t\u003cspan class=\"hljs-keyword\"\u003evalues\u003c/span\u003e(\"排水溝\", \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e);\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eタスクの更新\u003c/h3\u003e\n\u003cp\u003e親タスクを変更する場合、parent_idを書き換えるだけなので面倒ポイントなし。\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003eupdate tasks \u003cspan class=\"hljs-keyword\"\u003eset\u003c/span\u003e parent_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e11\u003c/span\u003e\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eタスクの削除\u003c/h3\u003e\n\u003cp\u003e子を持つ親タスクの削除で、子も含めて削除する場合を考える。そのタスクが持つ子タスクを知る必要があるので、取得と同様、ヒットしなくなるまで検索して子タスクのidを調べる必要がある。\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eselect\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e parent_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e; \u003cspan class=\"hljs-comment\"\u003e-- id 5, 8がヒット\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003eselect\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e parent_id \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e (\u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e); \u003cspan class=\"hljs-comment\"\u003e-- id 6, 7がヒット\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003eselect\u003c/span\u003e \u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e parent_id \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e (\u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e); \u003cspan class=\"hljs-comment\"\u003e-- ヒットなし\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003edelete\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e id \u003cspan class=\"hljs-keyword\"\u003ein\u003c/span\u003e (\u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e8\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e6\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e7\u003c/span\u003e);\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eただし、\u003ccode\u003eparent_id\u003c/code\u003eに外部キー制約で\u003ccode\u003eON DELETE CASCADE\u003c/code\u003eを設定しておけば、親を消した段階ですべて消える\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eALTER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eTABLE\u003c/span\u003e tasks\n\t\u003cspan class=\"hljs-keyword\"\u003eADD\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eFOREIGN\u003c/span\u003e KEY (`parent_id`) \u003cspan class=\"hljs-keyword\"\u003eREFERENCES\u003c/span\u003e tasks (`id`) \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eDELETE\u003c/span\u003e CASCADE;\n\n\u003cspan class=\"hljs-keyword\"\u003edelete\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003efrom\u003c/span\u003e tasks \u003cspan class=\"hljs-keyword\"\u003ewhere\u003c/span\u003e id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e;\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003e再帰クエリ\u003c/h3\u003e\n\u003cp\u003e再帰クエリを利用すれば、取得クエリの数は減る。詳細は後日書く。\u003c/p\u003e\n\u003cp\u003e\u003ca href=\"http://interprism.hatenablog.com/entry/fetch-tree-by-recursive-query\"\u003e再帰クエリで木構造のデータを取得する\u003c/a\u003e\u003c/p\u003e\n\u003ch2\u003e経路列挙\u003c/h2\u003e\n\u003cp\u003erootまでの経路を\u003ccode\u003e/\u003c/code\u003eなどの文字列で区切って保持する設計\u003c/p\u003e\n\u003cp\u003e|id|name|path|\n|---|---|---|\n|1|買い物|1|\n|2|じゃがいも|1/2|\n|3|にんじん|1/3|\n|4|掃除|4|\n|5|風呂|4/5|\n|6|浴槽|4/5/6|\n|7|換気扇|4/5/7|\n|8|洗面台|4/8|\n|9|読書|9|\u003c/p\u003e\n\u003ch3\u003eタスクの取得\u003c/h3\u003e\n\u003cp\u003e例えば\u003ccode\u003e掃除\u003c/code\u003eタスク(id = 4)に紐づくタスクの取得は以下のようなクエリになる\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n\t\u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e\n\ttasks2\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e\n\t`path` \u003cspan class=\"hljs-keyword\"\u003eLIKE\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'4'\u003c/span\u003e\n\t\u003cspan class=\"hljs-keyword\"\u003eOR\u003c/span\u003e `path` \u003cspan class=\"hljs-keyword\"\u003eLIKE\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'4/%'\u003c/span\u003e\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eタスクの追加\u003c/h3\u003e\n\u003cp\u003e親タスクの追加。\u003ccode\u003eid\u003c/code\u003eが\u003ccode\u003eauto_increment\u003c/code\u003eの場合、まずはpathなしでinsertし、採番されたIDを確認してupdateをかける方法が考えられる。（他になにかいい感じにやれる方法あるんだろうか？）\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eINSERT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eINTO\u003c/span\u003e tasks2 (`name`)\n\t\t\u003cspan class=\"hljs-keyword\"\u003eVALUES\u003c/span\u003e(\"親タスク\"); \u003cspan class=\"hljs-comment\"\u003e-- id 10が採番された\u003c/span\u003e\nUPDATE tasks2 \u003cspan class=\"hljs-keyword\"\u003eSET\u003c/span\u003e `path` \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'10'\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e;\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e子タスク追加は、親になるタスクの\u003ccode\u003epath\u003c/code\u003eに自分のidを追加して保存すれば良い。クエリは↑と同様。\u003c/p\u003e\n\u003ch3\u003eタスクの削除\u003c/h3\u003e\n\u003cp\u003e親とそれに関連する子すべてを削除する場合を考える。\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eDELETE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e tasks2\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e `path` \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'4'\u003c/span\u003e\n\t\u003cspan class=\"hljs-keyword\"\u003eOR\u003c/span\u003e `path` \u003cspan class=\"hljs-keyword\"\u003eLIKE\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e'4/%'\u003c/span\u003e\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e手軽に消せる。\u003c/p\u003e\n\u003ch2\u003e閉包テーブル\u003c/h2\u003e\n\u003cp\u003e親子関係を専用のテーブルで管理する設計。具体的には、以下のようなタスクがあるとき\u003c/p\u003e\n\u003cp\u003e|id|name|\n|---|---|\n|1|買い物|\n|2|じゃがいも|\n|3|にんじん|\n|4|掃除|\n|5|風呂|\n|6|浴槽|\n|7|換気扇|\n|8|洗面台|\n|9|読書|\u003c/p\u003e\n\u003cp\u003e親子関係全パターン(直接の親子だけではない)を管理するテーブルを用意する。\u003c/p\u003e\n\u003cp\u003e|parent_id|child_id|\n|---|---|\n|1|1|\n|1|2|\n|1|3|\n|4|4|\n|4|5|\n|4|6|\n|4|7|\n|4|8|\n|5|5|\n|5|6|\n|5|7|\n|6|6|\n|7|7|\n|8|8|\n|9|9|\u003c/p\u003e\n\u003ch3\u003eタスクの取得\u003c/h3\u003e\n\u003cp\u003e\u003ccode\u003e掃除\u003c/code\u003eタスク(id = 4)に紐づくタスクの取得\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n\t\u003cspan class=\"hljs-operator\"\u003e*\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e\n\ttasks3 \u003cspan class=\"hljs-keyword\"\u003eAS\u003c/span\u003e t\n\t\u003cspan class=\"hljs-keyword\"\u003eINNER\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eJOIN\u003c/span\u003e task_hierarchie \u003cspan class=\"hljs-keyword\"\u003eAS\u003c/span\u003e h \u003cspan class=\"hljs-keyword\"\u003eON\u003c/span\u003e t.id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e h.child_id\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e\n\th.parent_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e;\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e閉包テーブル(\u003ccode\u003etask_hierarchie\u003c/code\u003e)の\u003ccode\u003eparent_id\u003c/code\u003e=4を探すだけでいい。\u003c/p\u003e\n\u003ch3\u003eタスク追加\u003c/h3\u003e\n\u003cp\u003e一番上の階層にタスクを足す場合\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eINSERT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eINTO\u003c/span\u003e tasks (`name`)\n\t\t\u003cspan class=\"hljs-keyword\"\u003eVALUES\u003c/span\u003e(\"散歩\");\n\u003cspan class=\"hljs-keyword\"\u003eINSERT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eINTO\u003c/span\u003e task_hierarchie\n\t\t\u003cspan class=\"hljs-keyword\"\u003eVALUES\u003c/span\u003e(\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e, \u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e);\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e子タスクの追加。子タスク自身のidと、子を足す対象の親全てに子のidを足す。例えば、掃除/風呂(id=5)の子に排水溝を足す場合、親である、掃除(id=4)と風呂(id=5)それぞれに排水溝のidのパターンを追加する。また\u003c/p\u003e\n\u003cp\u003e対象のすべての親を探すとき、\u003ccode\u003etask_hierarchie\u003c/code\u003eの\u003ccode\u003echild_id\u003c/code\u003eが対象idと一致の条件で検索すればよい。\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eINSERT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eINTO\u003c/span\u003e tasks (`name`)\n\t\t\u003cspan class=\"hljs-keyword\"\u003eVALUES\u003c/span\u003e(\"排水溝\"); \u003cspan class=\"hljs-comment\"\u003e-- id=10\u003c/span\u003e\n\n\u003cspan class=\"hljs-keyword\"\u003eINSERT\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eINTO\u003c/span\u003e task_hierarchie\n\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n\th.parent_id,\n\t\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e\n\ttask_hierarchie \u003cspan class=\"hljs-keyword\"\u003eAS\u003c/span\u003e h\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e\n\th.child_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e5\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eUNION\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eALL\u003c/span\u003e\n\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n\t\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e,\n\t\u003cspan class=\"hljs-number\"\u003e10\u003c/span\u003e;\u003c/code\u003e\u003c/pre\u003e\n\u003ch3\u003eタスク削除\u003c/h3\u003e\n\u003cp\u003e掃除タスク(id=4)を削除する場合\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-sql\"\u003e\u003cspan class=\"hljs-keyword\"\u003eDELETE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e tasks3\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e id \u003cspan class=\"hljs-keyword\"\u003eIN\u003c/span\u003e(\n\t\t\u003cspan class=\"hljs-keyword\"\u003eSELECT\u003c/span\u003e\n\t\t\tchild_id \u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e task_hierarchie\n\t\t\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e\n\t\t\tparent_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e);\n\n\u003cspan class=\"hljs-keyword\"\u003eDELETE\u003c/span\u003e \u003cspan class=\"hljs-keyword\"\u003eFROM\u003c/span\u003e task_hierarchie\n\u003cspan class=\"hljs-keyword\"\u003eWHERE\u003c/span\u003e parent_id \u003cspan class=\"hljs-operator\"\u003e=\u003c/span\u003e \u003cspan class=\"hljs-number\"\u003e4\u003c/span\u003e;\u003c/code\u003e\u003c/pre\u003e\n\u003ch2\u003e入れ子集合\u003c/h2\u003e\n\u003cp\u003e後で書きます。\u003c/p\u003e\n\u003cp\u003e\u003ca href=\"https://mickindex.sakura.ne.jp/database/db_tree_ns.html\"\u003eSQLで木と階層構造のデータを扱う（１）―― 入れ子集合モデル\u003c/a\u003e\u003c/p\u003e\n\u003ch2\u003eまとめ\u003c/h2\u003e\n\u003cp\u003e隣接リストは、階層上限がある、かつ深くならない場合において利用できる。が、しかし上限を深くしたくなったときにキツイ。\u003c/p\u003e\n\u003cp\u003e経路列挙は経路が文字列で、正しくないパスがinsertされてしまう可能性を考えるとキツイ。また、auto_incrementのとき一度insertしてidを確認してupdateする必要があるのも面倒。\u003c/p\u003e\n\u003cp\u003e閉包テーブルはデータ量が多くなってしまいがちだが、手間なく各種操作ができるので有用に感じた。\u003c/p\u003e\n\u003cp\u003e個人的に作成しているアプリケーションで階層構造を考える必要があり、調べてみた。要件として上限が決まっている、かつ浅いので隣接リストか閉包テーブルを利用するのが妥当と判断。使い勝手と今後上限をなくしても問題ないことから、最終的には閉包テーブルを選択した。\u003c/p\u003e\n","ogp":{"title":"RDBで階層構造をあつかう","description":"例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。"}},"__N_SSG":true},"page":"/articles/[id]","query":{"id":"2021-03-21-db-tree"},"buildId":"xal_XozqYmAXaQxo-GALa","nextExport":false,"isFallback":false,"gsp":true}</script><script nomodule="" src="/_next/static/chunks/polyfills-11c8eba6a84e3fddec04.js"></script><script src="/_next/static/chunks/main-1aebe1c5ebad78b6eefd.js" async=""></script><script src="/_next/static/chunks/webpack-e067438c4cf4ef2ef178.js" async=""></script><script src="/_next/static/chunks/framework.2113c6061a2f456066a1.js" async=""></script><script src="/_next/static/chunks/commons.040a3874e38b7cc6b430.js" async=""></script><script src="/_next/static/chunks/pages/_app-5874fa266a7d44909009.js" async=""></script><script src="/_next/static/chunks/c5b568cee8545d966ddc8d89f9063461e084494a.bb32f9c4396722e794d4.js" async=""></script><script src="/_next/static/chunks/pages/articles/%5Bid%5D-16081245fdd7df34b03c.js" async=""></script><script src="/_next/static/xal_XozqYmAXaQxo-GALa/_buildManifest.js" async=""></script><script src="/_next/static/xal_XozqYmAXaQxo-GALa/_ssgManifest.js" async=""></script></body></html>
