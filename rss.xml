@@ -9,8 +9,8 @@
   <guid>https://m0r1m0.github.io/articles/2021-05-29-crkbd</guid>
   <title>自作キーボード入門した</title>
   <link>https://m0r1m0.github.io/articles/2021-05-29-crkbd</link>
-  <description><![CDATA[ついに。買ったのは、遊舎工房の[「自作キーボード入門セット」](https://shop.yushakobo.jp/collections/keyboard/products/beginnerset?variant=37772273516705)。 Corne Cherry V3 を選択した。道具もなにもなかったのでググりつつ amazon で買い揃えた。]]></description>
-  <content:encoded><![CDATA[<p>ついに。買ったのは、遊舎工房の<a href="https://shop.yushakobo.jp/collections/keyboard/products/beginnerset?variant=37772273516705">「自作キーボード入門セット」</a>。 Corne Cherry V3 を選択した。道具もなにもなかったのでググりつつ amazon で買い揃えた。</p>
+  <description><![CDATA[ついに。買ったのは、遊舎工房の[「自作キーボード入門セット」](https://shop.yushakobo.jp/collections/keyboard/products/beginnerset?variant=37772273516705)。 Corne Cherry V3 を選択した。道具もなにひとつ持っていなかったのでググりつつ amazon で買い揃えた。]]></description>
+  <content:encoded><![CDATA[<p>ついに。買ったのは、遊舎工房の<a href="https://shop.yushakobo.jp/collections/keyboard/products/beginnerset?variant=37772273516705">「自作キーボード入門セット」</a>。 Corne Cherry V3 を選択した。道具もなにひとつ持っていなかったのでググりつつ amazon で買い揃えた。</p>
 <h2>build</h2>
 <p>はんだ付けは中学校以来だったので不安だったが、やってみると意外と難なくできた。 <a href="https://github.com/foostan/crkbd/blob/master/corne-cherry/doc/v3/buildguide_jp.md">build guide</a> だけでは不安だったので、YouTube で<a href="https://www.youtube.com/watch?v=O49hrYDCL3o">動画</a>を見つけて参考にしながら進めた。</p>
 <p>フラックスは買っておいてよかったと思った。あるのとないのでははんだ付けのしやすさが全然違った。参考にした動画で<a href="https://www.amazon.co.jp/dp/B07QGXT74X">ペンタイプ</a>を使っていて、良さそうだったので購入した。</p>
@@ -42,8 +42,8 @@
   <guid>https://m0r1m0.github.io/articles/2021-03-21-db-tree</guid>
   <title>RDBで階層構造をあつかう</title>
   <link>https://m0r1m0.github.io/articles/2021-03-21-db-tree</link>
-  <description><![CDATA[例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。]]></description>
-  <content:encoded><![CDATA[<p>例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があったとして、その関係性をどうDBに保存するのか、わからなかったので調べた。</p>
+  <description><![CDATA[例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があるとする。その関係性をどうDBに保存するのかいまいちわからなかったので調べた。]]></description>
+  <content:encoded><![CDATA[<p>例えばTODOアプリにおいて、親タスク、子タスク、孫タスク...のようにタスクを作成できる機能があるとする。その関係性をどうDBに保存するのかいまいちわからなかったので調べた。</p>
 <p>よく知られている手法としては以下の４つがある</p>
 <ul>
 <li>隣接リスト</li>
@@ -76,7 +76,7 @@ FROM
 WHERE
 	t1.id = 4;
 </code></pre>
-<p>このクエリは、そのタスクが最大何階層あるのかを事前に知っておく必要がある、という問題がある。子タスクのネストに制限がない場合、このクエリは現実的ではない。つまり、1クエリで全取得はできない。</p>
+<p>このクエリは、そのタスクが最大何階層あるのかを事前に知っておく必要がある、という問題がある。子タスクのネストに制限がない場合、このクエリは現実的でない。つまり、1クエリで全取得はできない。</p>
 <p>事前に何階層あるかを知らない場合、<code>parent_id</code>にヒットしたレコードのidをいれてヒットしなくなるまで検索していく方法で取得できる。</p>
 <pre><code class="language-sql">select * from tasks where parent_id = 4; -- id 5, 8がヒット
 
@@ -267,7 +267,7 @@ WHERE parent_id = 4;
 <p>diffstatはdiff結果から各ファイルの追加・削除行数をまとめて出してくれるやつぽい。</p>
 <p>つまり、<code>—numstat</code>はそのdiffstatを<code>追加行数 削除行数 ファイルパス</code>形式で出力してくれる。</p>
 <h2><code>--pretty</code></h2>
-<p>コミットログをprettyで指定した形式で表示する。例えば、<code>%H</code> はコミットハッシュ。</p>
+<p>コミットログを指定した形式で表示する。例えば、<code>%H</code> はコミットハッシュ。</p>
 <p>つまり、<code>git log —numstat —pretty="%H"</code> は以下のような出力になる</p>
 <pre><code class="language-bash">f7cc64ff097f165df3ac457acac183f377acdc0c
 
@@ -285,7 +285,10 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 <p><code>パターン{アクション}</code>の形式で指定した処理をしていく。</p>
 <p>例えば、<code>NF==3 {plus+=$1; minus+=$2}</code>のパターン<code>NF==3</code>は、空白で区切られた文字列の数が3つの行を指す。<code>—-numstat</code> は追加行数、削除行数、ファイルパスが空白で区切られてるので、一致する。つまり、追加行数、削除行数、ファイルパスの行で、plus、minusという変数に追加・削除行数を足し込む、という処理になる。</p>
 <p>また、ENDは最終行のあと、というパターン。つまり、<code>END {printf("+%d, -%d\n", plus, minus)}</code>は最終行まで処理したあと、<code>"+%d, -%d\n"</code>形式でそれぞれ追加行数、削除行数を出力するという処理になる。</p>
-<p>なるほど、たしかに<code>git log --numstat --pretty="%H" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</code>がブランチ間の変更行数を出すことがわかった。</p>
+<p>なるほど、たしかに</p>
+<pre><code>git log --numstat --pretty="%H" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
+</code></pre>
+<p>がブランチ間の変更行数を出すことがわかった。</p>
 <p>ただ、<code>--pretty</code>でわざわざ<code>%H</code>とする必要性はないように思う。コミットハッシュは最終的な出力に関係ないので。コミットに関する情報は消して、各ファイルの変更行数情報だけが出力されればおｋである。つまり、完成形としては、以下のようになる。</p>
 <pre><code class="language-bash">git log --numstat --pretty="" branch1..branch2  | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
 </code></pre>
@@ -408,8 +411,8 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
   <description><![CDATA[年越しそば食べた。]]></description>
   <content:encoded><![CDATA[<p>年越しそば食べた。</p>
 <p><img src="https://i.imgur.com/bxbj508.jpg" alt="そば" title="年越しそば"></p>
-<p>去年の 12 月頃今のマンションに引っ越してきたんだけど、あれからもう 1 年以上経ってしまったのかと思うとときが経つのがはやすぎてこわい。</p>
-<p>1 年振り返って、成長できたなと実感があまりできないのが悲しい。来年はなにか振り返ることができるようなことを残していきたい。</p>
+<p>去年の 12 月頃今のマンションに引っ越してきたんだけど、あれからもう 1 年以上経ってしまったのかと思うと、時間の経過が早すぎて怖い。</p>
+<p>1 年振り返って、成長できたなという実感があまりないので悲しい。来年はなにか振り返ることができるものを残していきたい。</p>
 ]]></content:encoded>
   <pubDate>Thu, 31 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
@@ -434,7 +437,7 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 <p>お届け予定日が 1/5 だったが、これを逃すとまたしばらく買えないだろうと思い、即ポチった。</p>
 <p>更には、その翌日になって、お届け予定日が 12/16 に変更された。</p>
 <p><img src="https://i.imgur.com/Y9VPQVW.jpg" alt="1/5から12/16に変更"></p>
-<p>今年の運を使い切ったに違いない。これを気に毎日やることにする。</p>
+<p>今年の運を使い切ったに違いない。これを気に毎日やっていきたい。</p>
 ]]></content:encoded>
   <pubDate>Wed, 16 Dec 2020 00:00:00 GMT</pubDate>
 </item><item>
@@ -456,7 +459,7 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
   <content:encoded><![CDATA[<p>新しいテーブルが届いた。かわいい。</p>
 <p><img src="https://i.imgur.com/ix72MiC.jpg" alt="新しいテーブル"></p>
 <p><a href="https://m0r1m0.github.io/articles/2020-12-08-sofa">ソファが届いた記事</a>で書いたように、ソファダイニングのためのテーブル。高さ調節ができるので、良い。</p>
-<p>今回は<a href="https://www.low-ya.com/goods/F706_G1010">LOWYA</a>で買った。見た目かわいいし、高さ調節もできて基本的には満足しているが、当然、脚がくろすしているので、じゃまになることはある。</p>
+<p>今回は<a href="https://www.low-ya.com/goods/F706_G1010">LOWYA</a>で買った。見た目かわいいし、高さ調節もできて基本的には満足している。ただ、脚がくろすしているので邪魔になることはある。</p>
 <p>本腰入れてここで作業することはないので、まあおｋ。</p>
 ]]></content:encoded>
   <pubDate>Sun, 13 Dec 2020 00:00:00 GMT</pubDate>
