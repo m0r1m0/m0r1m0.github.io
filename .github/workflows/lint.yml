@@ -1,0 +1,24 @@
+name: github pages
+on: [pull_request]
+env:
+  CI: true
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: install
+        run: npm install --frozen-lockfile
+      - name: lint
+        run: npm run lint
+
+      - name: Actions Status Discord
+        uses: sarisia/actions-status-discord@v1.7.1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
