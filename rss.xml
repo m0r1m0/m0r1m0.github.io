@@ -4,8 +4,41 @@
     <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Sun, 21 Mar 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 29 May 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://m0r1m0.github.io/articles/2021-05-29-crkbd</guid>
+  <title>自作キーボード入門した</title>
+  <link>https://m0r1m0.github.io/articles/2021-05-29-crkbd</link>
+  <description><![CDATA[ついに。買ったのは、遊舎工房の[「自作キーボード入門セット」](https://shop.yushakobo.jp/collections/keyboard/products/beginnerset?variant=37772273516705)。 Corne Cherry V3 を選択した。道具もなにもなかったのでググりつつ amazon で買い揃えた。]]></description>
+  <content:encoded><![CDATA[<p>ついに。買ったのは、遊舎工房の<a href="https://shop.yushakobo.jp/collections/keyboard/products/beginnerset?variant=37772273516705">「自作キーボード入門セット」</a>。 Corne Cherry V3 を選択した。道具もなにもなかったのでググりつつ amazon で買い揃えた。</p>
+<h2>build</h2>
+<p>はんだ付けは中学校以来だったので不安だったが、やってみると意外と難なくできた。 <a href="https://github.com/foostan/crkbd/blob/master/corne-cherry/doc/v3/buildguide_jp.md">build guide</a> だけでは不安だったので、YouTube で<a href="https://www.youtube.com/watch?v=O49hrYDCL3o">動画</a>を見つけて参考にしながら進めた。</p>
+<p>フラックスは買っておいてよかったと思った。あるのとないのでははんだ付けのしやすさが全然違った。参考にした動画で<a href="https://www.amazon.co.jp/dp/B07QGXT74X">ペンタイプ</a>を使っていて、良さそうだったので購入した。</p>
+<p><img src="https://i.imgur.com/ou7v51R.jpeg" alt="" title="完成"></p>
+<h2>key map</h2>
+<p>ほぼデフォルトのままにしてある。しばらく使ってみてブラッシュアップしていきたい。詳細は以下の通り。</p>
+<h3>Layer 0</h3>
+<p><img src="https://i.imgur.com/lVzDy6p.png" alt=""></p>
+<ul>
+<li>Cmd + Space で Alfred のショートカットをうてるように、右の Alt を Cmd に変更。</li>
+<li>Layer 1, 2 切り替えキーの TAP にそれぞれ Lang 1, 2 を割り当てて、英数・かなの切り替えをできるように。</li>
+</ul>
+<h3>Layer 1</h3>
+<p><img src="https://i.imgur.com/XhS5Lxq.png" alt=""></p>
+<ul>
+<li>数字、Fn、矢印をあつめた</li>
+</ul>
+<h3>Layer 2</h3>
+<p><img src="https://i.imgur.com/23oVDAc.png" alt=""></p>
+<ul>
+<li>記号を標準的なキーボードと同じような並び・配置にした</li>
+<li>左側に余裕があったので、ボリュームUP・DOWNを追加</li>
+</ul>
+<h2>おわり</h2>
+<p>この記事も Corne Cherry で書いている。まだ慣れていないので結構時間がかかってしまった。練習していきたい。</p>
+]]></content:encoded>
+  <pubDate>Sat, 29 May 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://m0r1m0.github.io/articles/2021-03-21-db-tree</guid>
   <title>RDBで階層構造をあつかう</title>
   <link>https://m0r1m0.github.io/articles/2021-03-21-db-tree</link>
@@ -458,19 +491,6 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 <p>レシピは<a href="https://twitter.com/suuxs">ちゃんすー</a>に教えてもらった神。あざす。</p>
 ]]></content:encoded>
   <pubDate>Thu, 10 Dec 2020 00:00:00 GMT</pubDate>
-</item><item>
-  <guid>https://m0r1m0.github.io/articles/2020-12-09-miso-soup</guid>
-  <title>南蛮海老のみそ汁の素🍤</title>
-  <link>https://m0r1m0.github.io/articles/2020-12-09-miso-soup</link>
-  <description><![CDATA[[南蛮海老のみそ汁の素](https://www.kaldi.co.jp/ec/pro/disp/1/4571347775525)でみそ汁を作った。めっちゃエビ。めっちゃうまい。]]></description>
-  <content:encoded><![CDATA[<p><a href="https://www.kaldi.co.jp/ec/pro/disp/1/4571347775525">南蛮海老のみそ汁の素</a>でみそ汁を作った。めっちゃエビ。めっちゃうまい。</p>
-<p><img src="https://i.imgur.com/CUzUqz5.jpg" alt="南蛮海老のみそ汁の素" title="南蛮海老のみそ汁の素">
-<img src="https://i.imgur.com/PLIutFo.jpg" alt="みそ汁と鶏むね肉のみぞれ煮" title="みそ汁と鶏むね肉のみぞれ煮"></p>
-<p>みそ汁の素大さじ1と熱湯150mlを注ぐだけでみそ汁ができて便利すぎる。これから朝ごはんに海老のみそ汁飲む。</p>
-<p>それから、ばあちゃんに送ってもらった大根が余ってるので鶏むね肉のみぞれ煮も作った。うまし。
-まだまだ大根余ってるので、鍋とかしようかな。。</p>
-]]></content:encoded>
-  <pubDate>Wed, 09 Dec 2020 00:00:00 GMT</pubDate>
 </item>
   </channel>
 </rss>
