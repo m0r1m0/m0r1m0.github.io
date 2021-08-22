@@ -4,8 +4,40 @@
     <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Sat, 29 May 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 22 Aug 2021 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://m0r1m0.github.io/articles/2021-08-22-ellipsis-by-gradient</guid>
+  <title>`mask-image` と `linear-graident()` を使った省略表現</title>
+  <link>https://m0r1m0.github.io/articles/2021-08-22-ellipsis-by-gradient</link>
+  <description><![CDATA[<iframe height="300" style="width: 100%;" scrolling="no" title="ellipsis" src="https://codepen.io/yuki-wd/embed/ExXYbZE?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">]]></description>
+  <content:encoded><![CDATA[<iframe height="300" style="width: 100%;" scrolling="no" title="ellipsis" src="https://codepen.io/yuki-wd/embed/ExXYbZE?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/yuki-wd/pen/ExXYbZE">
+  ellipsis</a> by pywd (<a href="https://codepen.io/yuki-wd">@yuki-wd</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+<p>こんな感じに、はみ出した部分を薄くする表現。省略表現と書いたが、省略ではない気がしてきた...</p>
+<h2>考え方</h2>
+<blockquote>
+<p>mask-image は CSS のプロパティで、要素のマスクレイヤーとして使用される画像を設定します。
+https://developer.mozilla.org/ja/docs/Web/CSS/mask-image</p>
+</blockquote>
+<p><code>mask-image</code> に <code>linear-gradient()</code> を設定することで、指定位置以降(はみ出した場所)の要素の透明度を上げてやろうというアプローチ。</p>
+<h2>実装</h2>
+<p>はみ出したかどうかを判定したい要素(今回は <code>.box</code>)を<code>width: 100%</code>の要素(<code>.row</code>)で囲う。この<code>.row</code>に<code>mask-image</code>を設定する。</p>
+<p><code>linear-gradient()</code> で右向きに <code>rgb(0,0,0)</code> から <code>rgba(0,0,0,0.4)</code>に変化するように設定する。それぞれ、はみ出し部分(まで|から)変化するように設定することで、グラデーションなしにはみ出し部分から透明度が上がることになる。</p>
+<p>具体的には以下のようになる</p>
+<pre><code class="language-css">.row {
+  width: 100%;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 100px,
+    rgba(0, 0, 0, 0.4) 100px
+  );
+}
+</code></pre>
+]]></content:encoded>
+  <pubDate>Sun, 22 Aug 2021 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://m0r1m0.github.io/articles/2021-05-29-crkbd</guid>
   <title>自作キーボード入門した</title>
   <link>https://m0r1m0.github.io/articles/2021-05-29-crkbd</link>
@@ -484,16 +516,6 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 <p>今日のレシピは、<a href="https://cookpad.com/recipe/2844337">タレが絡む ☆ 豚肉と卵、小松菜の炒めもの</a></p>
 ]]></content:encoded>
   <pubDate>Fri, 11 Dec 2020 00:00:00 GMT</pubDate>
-</item><item>
-  <guid>https://m0r1m0.github.io/articles/2020-12-10-tonteki</guid>
-  <title>トンテキ🐷</title>
-  <link>https://m0r1m0.github.io/articles/2020-12-10-tonteki</link>
-  <description><![CDATA[冷凍してた豚ロースがあったので、トンテキ作った。相変わらず野菜がないが、うまければそれでいい。]]></description>
-  <content:encoded><![CDATA[<p>冷凍してた豚ロースがあったので、トンテキ作った。相変わらず野菜がないが、うまければそれでいい。</p>
-<p><img src="https://i.imgur.com/lBARgzm.jpg" alt="トンテキ"></p>
-<p>レシピは<a href="https://twitter.com/suuxs">ちゃんすー</a>に教えてもらった神。あざす。</p>
-]]></content:encoded>
-  <pubDate>Thu, 10 Dec 2020 00:00:00 GMT</pubDate>
 </item>
   </channel>
 </rss>
