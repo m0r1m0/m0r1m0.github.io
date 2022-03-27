@@ -9,7 +9,7 @@ title: TypeScript で Google Cloud Functions の関数を書く
 
 ## 書く
 
-```ts:src/index.ts
+```ts
 import {HttpFunction} from '@google-cloud/functions-framework';
 
 export const helloWorld: HttpFunction = (req, res) => {
@@ -28,11 +28,13 @@ npm run watch
 
 セットアップで gts init したときに、npm scripts に `prepare` が追加されている。compile済みのものをデプロイする&typescriptはdevDependenciesなので、不要。削除する。
 
-```diff:package.json
+```diff
 - "prepare": "npm run compile",
 ```
 
-```bash:デプロイ
+デプロイ
+
+```bash
 gcloud functions deploy helloWorld \
 --runtime nodejs16 \
 --trigger-http \
