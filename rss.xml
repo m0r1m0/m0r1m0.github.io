@@ -4,8 +4,38 @@
     <link>https://m0r1m0.github.io</link>
     <description>morimo のブログ</description>
     <language>ja</language>
-    <lastBuildDate>Sun, 22 Aug 2021 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 27 Mar 2022 00:00:00 GMT</lastBuildDate>
     <item>
+  <guid>https://m0r1m0.github.io/articles/2022-03-27-cloud-functions-typescript</guid>
+  <title>TypeScript で Google Cloud Functions の関数を書く</title>
+  <link>https://m0r1m0.github.io/articles/2022-03-27-cloud-functions-typescript</link>
+  <description><![CDATA[[functions-framework-nodejs](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) を使う。]]></description>
+  <content:encoded><![CDATA[<p><a href="https://github.com/GoogleCloudPlatform/functions-framework-nodejs">functions-framework-nodejs</a> を使う。</p>
+<h2>開発環境を準備する</h2>
+<p><a href="https://github.com/GoogleCloudPlatform/functions-framework-nodejs/blob/master/docs/typescript.md">ドキュメント</a>に従い、セットアップする。</p>
+<h2>書く</h2>
+<pre><code class="language-ts">import {HttpFunction} from '@google-cloud/functions-framework';
+
+export const helloWorld: HttpFunction = (req, res) => {
+  res.send('Hello, World');
+};
+</code></pre>
+<h2>ローカルで実行する</h2>
+<pre><code class="language-bash">npm run watch
+</code></pre>
+<h2>デプロイ</h2>
+<p>セットアップで gts init したときに、npm scripts に <code>prepare</code> が追加されている。compile済みのものをデプロイする&#x26;typescriptはdevDependenciesなので、不要。削除する。</p>
+<pre><code class="language-diff">- "prepare": "npm run compile",
+</code></pre>
+<p>デプロイ</p>
+<pre><code class="language-bash">gcloud functions deploy helloWorld \
+--runtime nodejs16 \
+--trigger-http \
+--allow-unauthenticated
+</code></pre>
+]]></content:encoded>
+  <pubDate>Sun, 27 Mar 2022 00:00:00 GMT</pubDate>
+</item><item>
   <guid>https://m0r1m0.github.io/articles/2021-08-22-ellipsis-by-gradient</guid>
   <title>`mask-image` と `linear-graident()` を使った省略表現</title>
   <link>https://m0r1m0.github.io/articles/2021-08-22-ellipsis-by-gradient</link>
@@ -506,16 +536,6 @@ e6490bc5ec9da0da9419acfc28186638e9ad6255
 思い描いてたグラタンではなかったけど、めちゃくちゃうまかった。</p>
 ]]></content:encoded>
   <pubDate>Sat, 12 Dec 2020 00:00:00 GMT</pubDate>
-</item><item>
-  <guid>https://m0r1m0.github.io/articles/2020-12-11-buta-komatuna-tamago</guid>
-  <title>🥚 ➕ 🐷 ➕ 🥬</title>
-  <link>https://m0r1m0.github.io/articles/2020-12-11-buta-komatuna-tamago</link>
-  <description><![CDATA[ばあちゃんから貰ったものシリーズ。小松菜があまってたので、今日やすかった豚肉と卵でてきとーなレシピを検索して作った。まあ、うまかった。]]></description>
-  <content:encoded><![CDATA[<p>ばあちゃんから貰ったものシリーズ。小松菜があまってたので、今日やすかった豚肉と卵でてきとーなレシピを検索して作った。まあ、うまかった。</p>
-<p><img src="https://i.imgur.com/0QRxplu.jpg" alt="豚と小松菜と卵の炒めもの" title="豚と小松菜と卵の炒めもの"></p>
-<p>今日のレシピは、<a href="https://cookpad.com/recipe/2844337">タレが絡む ☆ 豚肉と卵、小松菜の炒めもの</a></p>
-]]></content:encoded>
-  <pubDate>Fri, 11 Dec 2020 00:00:00 GMT</pubDate>
 </item>
   </channel>
 </rss>
