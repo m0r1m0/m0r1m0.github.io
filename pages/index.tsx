@@ -31,9 +31,11 @@ export default function Home({ articles }: Props): JSX.Element {
             return (
               <li key={id}>
                 <Link href={`/articles/${id}`}>
-                  {title}
-                  {date !== null &&
-                    `（${dayjs(date).format("YYYY年MM月DD日")}）`}
+                  <a>
+                    {title}
+                    {date !== null &&
+                      `（${dayjs(date).format("YYYY年MM月DD日")}）`}
+                  </a>
                 </Link>
               </li>
             );
