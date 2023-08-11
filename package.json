@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node ./scripts/generateRSS.mjs",
     "start": "next start",
-    "export": "next export && node ./scripts/generateRSS.mjs",
+    "export": "next export",
     "lint": "npm run lint:eslint && npm run lint:textlint",
     "fix": "eslint --fix . && prettier --write .",
     "test": "jest",
