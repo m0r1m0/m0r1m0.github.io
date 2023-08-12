@@ -20,6 +20,7 @@
     "plugin:react/recommended",
     "prettier",
     "prettier/@typescript-eslint",
-    "prettier/react"
+    "prettier/react",
+    "plugin:@next/next/recommended"
   ]
 }
