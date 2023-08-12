@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build && node ./scripts/generateRSS.mjs",
     "start": "next start",
+    "serve": "npx serve@latest out",
     "export": "next export",
     "lint": "npm run lint:eslint && npm run lint:textlint",
     "fix": "eslint --fix . && prettier --write .",
